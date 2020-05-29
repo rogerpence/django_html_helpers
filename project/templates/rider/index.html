@@ -15,7 +15,10 @@ https://simpleisbetterthancomplex.com/article/2017/08/19/how-to-render-django-fo
     {{form.errors}}
     <form method="POST" action="/rider/">
         {% csrf_token %}
-        <input type="text" name="id" id="id" value="{{rider_id}}"/>
+        <input type="text" name="id" id="id" value="{{rider_id}}"/><br>
+        <input type="text" name="rate" id="rate" value="{{rate}}"/><br>
+
+
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2"
                 for="first_name">

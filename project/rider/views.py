@@ -9,12 +9,13 @@ class Show(View):
         rider = Rider.objects.get(id=id)
         form = RiderForm(request.POST or None, instance=rider)
 
-        context = {'form': form, 'rider_id': id}
+        context = {'form': form, 'rider_id': id, 'rate': '77'}
         return render(request, 'rider/index.html', context)
 
 class Store(View):
     def post(self, request):
         id = request.POST.get('id')
+        rate =  request.POST.get('rate')
         rider = get_object_or_404(Rider, pk=id)
 
         full_name = rider.full_name
@@ -24,7 +25,7 @@ class Store(View):
             form.save()
             return redirect('index')
         else:
-            return render(request, 'rider/index.html', {'form':form, 'rider_id' : id})
+            return render(request, 'rider/index.html', {'form':form, 'rider_id' : id, 'rate': rate})
 
 class Index(View):
     def get(self, request):
