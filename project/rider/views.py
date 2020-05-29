@@ -9,13 +9,12 @@ class Show(View):
         rider = Rider.objects.get(id=id)
         form = RiderForm(request.POST or None, instance=rider)
 
-        context = {'form': form, 'rider_id': id, 'rate': '77'}
+        context = {'form': form, 'rider_id': id }
         return render(request, 'rider/index.html', context)
 
 class Store(View):
     def post(self, request):
         id = request.POST.get('id')
-        rate =  request.POST.get('rate')
         rider = get_object_or_404(Rider, pk=id)
 
         full_name = rider.full_name
