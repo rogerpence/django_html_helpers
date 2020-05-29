@@ -1,0 +1,107 @@
+{% load mytags %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rider</title>
+</head>
+<body>
+<!--
+https://simpleisbetterthancomplex.com/article/2017/08/19/how-to-render-django-form-manually.html
+-->
+
+    {{form.errors}}
+    <form method="POST" action="/rider/">
+        {% csrf_token %}
+        <input type="text" name="id" id="id" value="{{rider_id}}"/><br>
+
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2"
+                for="first_name">
+                First name
+            </label>
+            <input type="text" id="first_name" name="first_name" value="{{form.first_name.value}}">
+            </input
+
+            {{form.first_name.errors}}
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2"
+                for="last_name">
+                Last name
+            </label>
+            <input  type="text"
+                    class="appearance-none border border-gray-500 rounded w-full
+                        py-2 px-3 text-gray-700 leading-tight
+                        focus:outline-none focus:shadow-outline"
+                        id="last_name"
+                        name="last_name"
+                        value="{{form.last_name.value}}"
+                        placeholder="Last name">
+            </input>
+            {{form.last_name.errors}}
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2"
+                for="address">
+                Address
+            </label>
+            <input  type="text"
+                    class="appearance-none border border-gray-500 rounded w-full
+                        py-2 px-3 text-gray-700 leading-tight
+                        focus:outline-none focus:shadow-outline"
+                        id="address"
+                        name="address"
+                        value="{{form.address.value}}"
+                        placeholder="Address">
+            </input>
+            {{form.address.errors}}
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2"
+                for="city">
+                City
+            </label>
+            <input  type="text"
+                    class="appearance-none border border-gray-500 rounded w-full
+                        py-2 px-3 text-gray-700 leading-tight
+                        focus:outline-none focus:shadow-outline"
+                        id="city"
+                        name="city"
+                        value="{{form.city.value}}"
+                        placeholder="City">
+            </input>
+            {{form.city.errors}}
+        </div>
+        <div>
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+
+{% comment %} <div class="mb-4">
+    <label class="block text-gray-700 text-sm font-bold mb-2"
+           for="state_id">
+        State
+    </label>
+    <input  type="text"
+            class="appearance-none border border-gray-500 rounded w-full
+                   py-2 px-3 text-gray-700 leading-tight
+                   focus:outline-none focus:shadow-outline"
+                   id="state_id"
+                   name="state_id"
+                   value="{{form.state_id.value}}"
+                   placeholder="State">
+    </input>
+    {{form.state_id.errors}}
+</div> {% endcomment %}
+
+
+
+
+</body>
+</html>

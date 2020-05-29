@@ -24,7 +24,7 @@ class Store(View):
             form.save()
             return redirect('index')
         else:
-            return render(request, 'rider/index.html', {'form':form, 'rider_id' : id, 'rate': rate})
+            return render(request, 'rider/index.html', {'form':form, 'rider_id' : id})
 
 class Index(View):
     def get(self, request):

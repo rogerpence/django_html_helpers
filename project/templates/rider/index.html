@@ -6,102 +6,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rider</title>
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .or {
+            border: 1px dashed red;
+
+        }
+    </style>
 </head>
 <body>
 <!--
 https://simpleisbetterthancomplex.com/article/2017/08/19/how-to-render-django-form-manually.html
 -->
 
+
     {{form.errors}}
-    <form method="POST" action="/rider/">
-        {% csrf_token %}
-        <input type="text" name="id" id="id" value="{{rider_id}}"/><br>
 
+    <section class="flex items-center justify-center mt-8 px-4 md:px-0">
 
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2"
-                for="first_name">
-                First name
-            </label>
-            <input type="text" id="first_name" name="first_name" value="{{form.first_name.value}}">
-            </input
+        <form method="POST" action="/rider/">
+            {% csrf_token %}
+            <input type="hidden" name="id" id="id" value="{{rider_id}}"/><br>
 
-            {{form.first_name.errors}}
+                <div class="flex flex-wrap -mx-3 mb-6 or">
+                    <div class="w-full md:w-1/2 px-3 mb-2 md:mb-0">
+                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">First Name</label>
+                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4
+                                      leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                id="first_name" name="first_name" type="text" placeholder="First name" value="{{form.first_name.value}}">
+                        <div>
+                            <ul class="pl-2 text-red-600">
+                                {{form.first_name.errors}}
+                            </ul>
+                        </div>
+                    </div>
 
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2"
-                for="last_name">
-                Last name
-            </label>
-            <input  type="text"
-                    class="appearance-none border border-gray-500 rounded w-full
-                        py-2 px-3 text-gray-700 leading-tight
-                        focus:outline-none focus:shadow-outline"
-                        id="last_name"
-                        name="last_name"
-                        value="{{form.last_name.value}}"
-                        placeholder="Last name">
-            </input>
-            {{form.last_name.errors}}
-        </div>
+                    <div class="w-full md:w-1/2 px-3">
+                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">Last Name</label>
+                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4
+                                      leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                id="last-name" name="last_name" type="text" placeholder="Last name" value="{{form.last_name.value}}">
+                        <ul class="pl-2 text-red-600">
+                                {{form.last_name.errors}}
+                        </ul>
+                    </div>
+                </div>
 
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2"
-                for="address">
-                Address
-            </label>
-            <input  type="text"
-                    class="appearance-none border border-gray-500 rounded w-full
-                        py-2 px-3 text-gray-700 leading-tight
-                        focus:outline-none focus:shadow-outline"
-                        id="address"
-                        name="address"
-                        value="{{form.address.value}}"
-                        placeholder="Address">
-            </input>
-            {{form.address.errors}}
-        </div>
+                <div class="flex flex-wrap -mx-3 mb-6 or">
+                    <div class="w-full px-3">
+                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-password">Address</label>
+                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4
+                                      mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                id="address" name="address" type="text" value="{{form.address.value}}">
+                        <ul class="pl-2 text-red-600">
+                            {{form.address.errors}}
+                        </ul>
+                    </div>
+                </div>
 
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2"
-                for="city">
-                City
-            </label>
-            <input  type="text"
-                    class="appearance-none border border-gray-500 rounded w-full
-                        py-2 px-3 text-gray-700 leading-tight
-                        focus:outline-none focus:shadow-outline"
-                        id="city"
-                        name="city"
-                        value="{{form.city.value}}"
-                        placeholder="City">
-            </input>
-            {{form.city.errors}}
-        </div>
-        <div>
-            <button type="submit">Submit</button>
-        </div>
-    </form>
+                <div class="flex flex-wrap -mx-3 mb-6 or">
+                    <div class="w-full px-3">
+                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-password">City</label>
+                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4
+                                      mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                id="city" name="city" type="text" value="{{form.city.value}}">
+                        <ul class="pl-2 text-red-600">
+                            {{form.city.errors}}
+                        </ul>
+                    </div>
+                </div>
 
-{% comment %} <div class="mb-4">
-    <label class="block text-gray-700 text-sm font-bold mb-2"
-           for="state_id">
-        State
-    </label>
-    <input  type="text"
-            class="appearance-none border border-gray-500 rounded w-full
-                   py-2 px-3 text-gray-700 leading-tight
-                   focus:outline-none focus:shadow-outline"
-                   id="state_id"
-                   name="state_id"
-                   value="{{form.state_id.value}}"
-                   placeholder="State">
-    </input>
-    {{form.state_id.errors}}
-</div> {% endcomment %}
+                <div class="flex flex-wrap -mx-3 mb-6 or">
+                    <div class="w-full px-3">
+                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-password">Phone</label>
+                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4
+                                      mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                id="phone" name="phone" type="text" value="{{form.phone.value}}">
+                        <ul class="pl-2 text-red-600">
+                            {{form.phone.errors}}
+                        </ul>
+                    </div>
+                </div>
 
-
-
-
+            <div>
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        type="submit">Submit</button>
+            </div>
+        </form>
+    </section>
 </body>
 </html>
+
