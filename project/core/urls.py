@@ -15,9 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rider.views import Index as RiderIndex
+from rider.views import Show as RiderShow
+from rider.views import Store as RiderStore
 
 urlpatterns = [
-    path('', include('states.urls')),
+    path('', include('states.urls'), name="index"),
     path('admin/', admin.site.urls),
+
+    # !! no URLs are necessary in the app.
+    path('rider/<int:id>/', RiderShow.as_view()),
+    path('rider/', RiderStore.as_view()),
+
 
 ]
