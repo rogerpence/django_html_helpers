@@ -12,28 +12,24 @@ def create_tag(tagName, **kwargs):
     else:
         return f'<{tagName}>'
 
-def create_select_tag(items,
-                      text_field,
-                      value_field,
-                      current_value,
-                      select_tag_attrs = {},
-                      option_tag_attrs = {}):
-    select_markup = []
-
-    select_markup.append(create_tag('select',**select_tag_attrs))
+def create_options_list(items,
+                        text_field,
+                        value_field,
+                        selected_value_field_name,
+                        selected_value_field_value,
+                        option_tag_attrs = {}):
+    option_list = []
 
     for item in items:
-        if item[value_field] == current_value:
+        if str(item[selected_value_field_name]) == str(selected_value_field_value):
             option_tag_attrs['selected'] = 'selected'
         else:
             option_tag_attrs.pop('selected', None)
 
-        option_tag_attrs['value'] = item[value_field]
+        option_tag_attrs['value'] = str(item[value_field])
 
-        select_markup.append(create_tag('option', **option_tag_attrs))
-        select_markup.append(item[text_field])
-        select_markup.append('</option>')
+        option_list.append(create_tag('option', **option_tag_attrs))
+        option_list.append(str(item[text_field]))
+        option_list.append('</option>')
 
-    select_markup.append('</select>')
-
-    return "".join(select_markup)
+    return "".join(option_list)

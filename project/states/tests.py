@@ -9,21 +9,24 @@ class StatesTests(TestCase):
     def get_states(self):
         return [
             {
+                'id': 1,
                 'province': 'Alabama',
                 'abbreviation': 'AL'
             },
             {
+                'id': 2,
                 'province': 'Indiana',
                 'abbreviation': 'IN'
             },
             {
+                'id': 3,
                 'province': 'Colorado',
                 'abbreviation': 'CO'
             },
         ]
 
     def test_create_tag(self):
-        expected_tag = '<select id="state" name="state" class="m-32 px-4 center">'
+        # expected_tag = '<select id="state" name="state" class="m-32 px-4 center">'
         select_tag_attrs = {
             'id' : 'state',
             'name': 'state',
@@ -33,119 +36,103 @@ class StatesTests(TestCase):
         soup = BeautifulSoup(created_tag, features="html.parser")
         self.assertTrue(soup.find('select', {'name': 'state', 'class': 'm-32 px-4 center'}))
 
-    def test_create_tag_with_empty_dict(self):
+    def test_create_tag_with_no_attributes(self):
         expected_tag = '<select>'
         select_tag_attrs = {}
         created_tag = repo.create_tag('select', **select_tag_attrs)
         self.assertEqual(created_tag, expected_tag)
 
-    def test_create_select_tag(self):
-        select_tag_attrs = {
-            'id' : 'state',
-            'name': 'state',
-            'class': 'm-32 px-4 center'
-        }
-
+    def test_create_options_tag_with_string_value(self):
         option_tag_attrs = {
             'class': 'text-bold'
         }
 
-        current_state = 'AL'
-
-        created_tag = repo.create_select_tag(self.get_states(),
-                                            'province',
-                                            'abbreviation',
-                                            current_state,
-                                            select_tag_attrs,
-                                            option_tag_attrs)
+        created_tag = repo.create_options_list(items = self.get_states(),
+                                               text_field = 'province',
+                                               value_field = 'abbreviation',
+                                               selected_value_field_name = 'abbreviation',
+                                               selected_value_field_value = 'IN',
+                                               option_tag_attrs = option_tag_attrs)
 
         soup = BeautifulSoup(created_tag, features="html.parser")
 
-        self.assertTrue(soup.find('select', select_tag_attrs))
-
-        tag = soup.find('option', {**option_tag_attrs, 'value': 'AL', 'selected': 'selected'})
+        tag = soup.find('option', {**option_tag_attrs, 'value': 'AL'})
         self.assertTrue(tag and tag.text == 'Alabama')
-
-        tag = soup.find('option', {**option_tag_attrs, 'value': 'IN'})
-        self.assertTrue(tag and tag.text == 'Indiana')
 
         tag = soup.find('option', {**option_tag_attrs, 'value': 'CO'})
         self.assertTrue(tag and tag.text == 'Colorado')
 
+        tag = soup.find('option', {**option_tag_attrs, 'value': 'IN', 'selected': 'selected'})
+        self.assertTrue(tag and tag.text == 'Indiana')
 
     def test_create_select_tag_with_no_attributes(self):
-        current_state = 'AL'
+        options_list = repo.create_options_list(items = self.get_states(),
+                                                text_field = 'province',
+                                                value_field = 'abbreviation',
+                                                selected_value_field_name = 'abbreviation',
+                                                selected_value_field_value = 'CO')
 
-        created_tag = repo.create_select_tag(self.get_states(),
-                                            'province',
-                                            'abbreviation',
-                                            current_state)
+        soup = BeautifulSoup(options_list, features="html.parser")
 
-        soup = BeautifulSoup(created_tag, features="html.parser")
-
-        self.assertTrue(soup.find('select'))
-
-        tag = soup.find('option', {'value': 'AL', 'selected': 'selected'})
+        tag = soup.find('option', {'value': 'AL'})
         self.assertTrue(tag and tag.text == 'Alabama')
 
         tag = soup.find('option', {'value': 'IN'})
         self.assertTrue(tag and tag.text == 'Indiana')
 
-        tag = soup.find('option', {'value': 'CO'})
+        tag = soup.find('option', {'value': 'CO', 'selected': 'selected'})
         self.assertTrue(tag and tag.text == 'Colorado')
 
-    def test_create_select_tag_with_select_tag_attributes_only(self):
-        select_tag_attrs = {
-            'id': 'states'
-        }
+    def test_create_options_list_with_numeric_value(self):
+        options_list = repo.create_options_list(items = self.get_states(),
+                                                text_field = 'province',
+                                                value_field = 'id',
+                                                selected_value_field_name = 'abbreviation',
+                                                selected_value_field_value = 'CO')
 
-        current_state = 'AL'
+        soup = BeautifulSoup(options_list, features="html.parser")
 
-        created_tag = repo.create_select_tag(self.get_states(),
-                                            'province',
-                                            'abbreviation',
-                                            current_state,
-                                            select_tag_attrs)
-
-        soup = BeautifulSoup(created_tag, features="html.parser")
-
-        self.assertTrue(soup.find('select', select_tag_attrs))
-
-        tag = soup.find('option', {'value': 'AL', 'selected': 'selected'})
+        tag = soup.find('option', {'value': '1'})
         self.assertTrue(tag and tag.text == 'Alabama')
 
-        tag = soup.find('option', {'value': 'IN'})
+        tag = soup.find('option', {'value': '2'})
         self.assertTrue(tag and tag.text == 'Indiana')
 
-        tag = soup.find('option', {'value': 'CO'})
+        tag = soup.find('option', {'value': '3', 'selected': 'selected'})
         self.assertTrue(tag and tag.text == 'Colorado')
 
-    def test_create_select_tag_with_option_tag_attributes_only(self):
-        option_tag_attrs = {
-            'class': 'abc def'
-        }
+    def test_create_options_list_with_numeric_value_and_abbreviation_as_text(self):
+        options_list = repo.create_options_list(items = self.get_states(),
+                                                text_field = 'abbreviation',
+                                                value_field = 'id',
+                                                selected_value_field_name = 'abbreviation',
+                                                selected_value_field_value = 'CO')
 
-        current_state = 'AL'
+        soup = BeautifulSoup(options_list, features="html.parser")
 
-        # Note you have to pass an empty dictionary for the omitted
-        # select tag attributes if you want to skip them but provide
-        # option tag attributes.
-        created_tag = repo.create_select_tag(self.get_states(),
-                                            'province',
-                                            'abbreviation',
-                                            current_state,
-                                            {},
-                                            option_tag_attrs)
+        tag = soup.find('option', {'value': '1'})
+        self.assertTrue(tag and tag.text == 'AL')
 
-        soup = BeautifulSoup(created_tag, features="html.parser")
+        tag = soup.find('option', {'value': '2'})
+        self.assertTrue(tag and tag.text == 'IN')
 
-        self.assertTrue(soup.find('select'))
+        tag = soup.find('option', {'value': '3', 'selected': 'selected'})
+        self.assertTrue(tag and tag.text == 'CO')
 
-        tag = soup.find('option', {**option_tag_attrs, 'value': 'AL', 'selected': 'selected'})
+    def test_create_options_list_with_numeric_value_selected_value_field(self):
+        options_list = repo.create_options_list(items = self.get_states(),
+                                                text_field = 'province',
+                                                value_field = 'id',
+                                                selected_value_field_name = 'id',
+                                                selected_value_field_value = 2)
+
+        soup = BeautifulSoup(options_list, features="html.parser")
+
+        tag = soup.find('option', {'value': '1'})
         self.assertTrue(tag and tag.text == 'Alabama')
 
-        tag = soup.find('option', {**option_tag_attrs, 'value': 'IN'})
+        tag = soup.find('option', {'value': '2', 'selected': 'selected'})
         self.assertTrue(tag and tag.text == 'Indiana')
 
-        tag = soup.find('option', {**option_tag_attrs, 'value': 'CO'})
+        tag = soup.find('option', {'value': '3'})
         self.assertTrue(tag and tag.text == 'Colorado')
