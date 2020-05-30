@@ -24,6 +24,7 @@ class Show(View):
     def get(self, request, id):
         rider = Rider.objects.get(id=id)
         options_list = get_states_options_list(rider.state.abbreviation)
+
         form = RiderForm(request.POST or None, instance=rider)
 
         context = {'form': form, 'rider_id': id, 'options_list': options_list }
@@ -32,12 +33,14 @@ class Show(View):
 class Store(View):
     def post(self, request):
         id = request.POST.get('id')
-        state =  request.POST.get('state')
+
+        state_id =  request.POST.get('state')
+        current_state = State.objects.get(id=state_id)
+        options_list = get_states_options_list(current_state.abbreviation)
+
         rider = get_object_or_404(Rider, pk=id)
 
-        full_name = rider.full_name
         form = RiderForm(request.POST or None, instance=rider)
-        options_list = get_states_options_list(form.cleaned_data.get('state').abbreviation)
 
         if form.is_valid():
             form.save()
