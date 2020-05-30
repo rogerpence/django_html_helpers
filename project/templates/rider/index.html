@@ -1,38 +1,68 @@
 {% load mytags %}
-{% load widget_tweaks %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rider</title>
-    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/tailwind.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/select.css' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}"/>
     <style>
         .orx {
             border: 1px dashed red;
         }
-        .og {
+        .ogx {
             border: 1px dashed green;
         }
     </style>
 </head>
 <body>
-<!--
-https://simpleisbetterthancomplex.com/article/2017/08/19/how-to-render-django-form-manually.html
--->
 
+    <nav class="flex items-center justify-between flex-wrap bg-gray-600 p-6">
+        <div class="flex items-center flex-shrink-0 text-white mr-6">
+        <img
+            src="{% static 'rp.svg'%}"
+            alt="triangle with all three sides equal"
+            height="50"
+            width="50" />
+            <span class="pl-2 font-semibold text-xl tracking-tight"> Django form example</span>
+        </div>
+        <div class="block lg:hidden">
+            <button
+                class="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">
+                <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <title>Menu</title>
+                    <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+            {% comment %} <div class="text-sm lg:flex-grow">
+                <a href="#responsive-header" class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
+                    Docs
+                </a>
+                <a href="#responsive-header" class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
+                    Examples
+                </a>
+                <a href="#responsive-header" class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white">
+                    Blog
+                </a>
+            </div> {% endcomment %}
+        </div>
+    </nav>
 
 
     <section class="flex items-center justify-center mt-8 px-4 md:px-0 og">
-
         <form method="POST" action="/rider/">
             {% csrf_token %}
             <input type="hidden" name="id" id="id" value="{{rider_id}}"/><br>
 
                 <div class="flex flex-wrap -mx-3 mb-6 or">
-
                     <div class="w-full md:w-1/2 px-3 mb-2 md:mb-0 pb-3">
-                        <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="grid-first-name">First Name</label>
+                        <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="first-name">First Name</label>
                         <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4
                                       leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                 id="first_name" name="first_name" type="text" placeholder="First name" value="{{form.first_name.value}}">
@@ -44,20 +74,19 @@ https://simpleisbetterthancomplex.com/article/2017/08/19/how-to-render-django-fo
                     </div>
 
                     <div class="w-full md:w-1/2 px-3 pb-3">
-                        <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="grid-last-name">Last Name</label>
+                        <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="last_name">Last Name</label>
                         <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4
                                       leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                id="last-name" name="last_name" type="text" placeholder="Last name" value="{{form.last_name.value}}">
+                                id="last_name" name="last_name" type="text" placeholder="Last name" value="{{form.last_name.value}}">
                         <ul class="pl-2 text-red-600">
                                 {{form.last_name.errors}}
                         </ul>
                     </div>
-
                 </div>
 
                 <div class="flex flex-wrap -mx-3 mb-6 or">
                     <div class="w-full px-3">
-                        <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="grid-password">Address</label>
+                        <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="address">Address</label>
                         <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4
                                       mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                 id="address" name="address" type="text" value="{{form.address.value}}">
@@ -69,7 +98,7 @@ https://simpleisbetterthancomplex.com/article/2017/08/19/how-to-render-django-fo
 
                 <div class="flex flex-wrap -mx-3 mb-6 or">
                     <div class="w-full px-3">
-                        <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="grid-password">City</label>
+                        <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="city">City</label>
                         <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4
                                       mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                 id="city" name="city" type="text" value="{{form.city.value}}">
@@ -81,8 +110,17 @@ https://simpleisbetterthancomplex.com/article/2017/08/19/how-to-render-django-fo
 
                 <div class="flex flex-wrap -mx-3 mb-6 pb-3 or">
                     <div class="w-full px-3">
-                        <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="grid-password">State</label>
-                        <div class="relative">
+                        <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="state">State</label>
+                        <select name="state" id="state" class="select-css">
+                            {{options_list | safe}}
+                        </select>
+
+                        <!--
+                        This is the Tailwind select that flashes a large in the lower half of the screen. This
+                        is related to the SVG used for the dropdown arrow. I'm using the Filament group select
+                        tag styling for now to avoid this.
+                        -->
+                        {% comment %} <div class="relative">
                             <select
                                 class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700
                                     py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -93,13 +131,14 @@ https://simpleisbetterthancomplex.com/article/2017/08/19/how-to-render-django-fo
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                     <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
                             </div>
-                        </div>
+                        </div> {% endcomment %}
+
                     </div>
                 </div>
 
                 <div class="flex flex-wrap -mx-3 mb-6 or">
                     <div class="w-full px-3">
-                        <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="grid-password">Phone</label>
+                        <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="phone">Phone</label>
                         <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4
                                       mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                 id="phone" name="phone" type="text" value="{{form.phone.value}}">
@@ -114,7 +153,6 @@ https://simpleisbetterthancomplex.com/article/2017/08/19/how-to-render-django-fo
                         type="submit">Submit</button>
             </div>
         </form>
-
     </section>
 </body>
 </html>
