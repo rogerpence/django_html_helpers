@@ -22,12 +22,15 @@
 
     <nav class="flex items-center justify-between flex-wrap bg-gray-600 p-6">
         <div class="flex items-center flex-shrink-0 text-white mr-6">
-        <img
-            src="{% static 'rp.svg'%}"
-            alt="triangle with all three sides equal"
-            height="50"
-            width="50"/>
-            <span class="pl-2 font-semibold text-xl tracking-tight"> Django form example</span>
+        <a href="/">
+            <img
+                src="{% static 'rp.svg'%}"
+                alt="triangle with all three sides equal"
+                height="50"
+                width="50"
+                class="inline"/>
+                <span class="pl-2 font-semibold text-xl tracking-tight"> Django form example</span>
+            </a>
         </div>
         <div class="block lg:hidden">
             <button
@@ -56,7 +59,8 @@
 
 
     <section class="flex items-center justify-center mt-8 px-4 md:px-0 og">
-        <form method="POST" action="/rider/">
+        {% comment %} <form method="POST" action="/rider/{{rider_id}}"> {% endcomment %}
+        <form method="POST" action="{{form_action}}">
             {% csrf_token %}
             <input type="hidden" name="id" id="id" value="{{rider_id}}"/><br>
 
@@ -112,7 +116,7 @@
                     <div class="w-full px-3">
                         <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="state">State</label>
                         <select name="state" id="state" class="select-css">
-                            {{options_list | safe}}
+                            {{states_options_list | safe}}
                         </select>
 
                         <!--

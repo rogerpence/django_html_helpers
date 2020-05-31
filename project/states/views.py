@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from . models import State
-from core import repo
+from core import html_helpers
 
 def index(request):
     option_tag_attrs = {}
@@ -14,7 +14,7 @@ def index(request):
 
 
 
-    select_markup = repo.create_options_list(items = states_list,
+    select_markup = html_helpers.create_options_list(items = states_list,
                                              text_field = 'province',
                                              value_field = 'id',
                                              selected_value = '18',
