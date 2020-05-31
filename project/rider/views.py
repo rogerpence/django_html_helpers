@@ -109,10 +109,9 @@ class Create(View):
             return render(request, 'riders/show.html', context)
 
 class Index(View):
-
     def get(self, request):
         '''
-        Display a list of riders.
+        Display the list of riders.
         '''
         riders = Rider.objects.order_by('last_name')
 
