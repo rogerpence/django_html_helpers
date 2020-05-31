@@ -11,11 +11,13 @@ def index(request):
                         .all()
                         .order_by('province')
                         .values('id', 'province', 'abbreviation'))
+
+
+
     select_markup = repo.create_options_list(items = states_list,
                                              text_field = 'province',
                                              value_field = 'id',
-                                             selected_value_field_name = 'abbreviation',
-                                             selected_value_field_value = 'IN',
+                                             selected_value = '18',
                                              option_tag_attrs = option_tag_attrs)
 
     context = {

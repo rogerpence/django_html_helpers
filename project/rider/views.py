@@ -6,7 +6,7 @@ from .forms import RiderForm
 from states.models import State
 from core import repo
 
-def get_states_options_list(selected_state_abbreviation):
+def get_states_options_list(selected_state_id):
     states_list = (State.objects
                         .all()
                         .order_by('province')
@@ -14,8 +14,7 @@ def get_states_options_list(selected_state_abbreviation):
     select_markup = repo.create_options_list(items = states_list,
                                              text_field = 'province',
                                              value_field = 'id',
-                                             selected_value_field_name = 'abbreviation',
-                                             selected_value_field_value = selected_state_abbreviation,
+                                             selected_value = selected_state_id,
                                              option_tag_attrs = {})
 
     return select_markup
@@ -23,7 +22,7 @@ def get_states_options_list(selected_state_abbreviation):
 class Show(View):
     def get(self, request, id):
         rider = Rider.objects.get(id=id)
-        options_list = get_states_options_list(rider.state.abbreviation)
+        options_list = get_states_options_list(rider.state.id)
 
         form = RiderForm(request.POST or None, instance=rider)
 

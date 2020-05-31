@@ -50,8 +50,8 @@ class StatesTests(TestCase):
         created_tag = repo.create_options_list(items = self.get_states(),
                                                text_field = 'province',
                                                value_field = 'abbreviation',
-                                               selected_value_field_name = 'abbreviation',
-                                               selected_value_field_value = 'IN',
+                                            #    selected_value_field_name = 'abbreviation',
+                                               selected_value = 'IN',
                                                option_tag_attrs = option_tag_attrs)
 
         soup = BeautifulSoup(created_tag, features="html.parser")
@@ -69,8 +69,8 @@ class StatesTests(TestCase):
         options_list = repo.create_options_list(items = self.get_states(),
                                                 text_field = 'province',
                                                 value_field = 'abbreviation',
-                                                selected_value_field_name = 'abbreviation',
-                                                selected_value_field_value = 'CO')
+                                                # selected_value_field_name = 'abbreviation',
+                                                selected_value = 'CO')
 
         soup = BeautifulSoup(options_list, features="html.parser")
 
@@ -87,8 +87,8 @@ class StatesTests(TestCase):
         options_list = repo.create_options_list(items = self.get_states(),
                                                 text_field = 'province',
                                                 value_field = 'id',
-                                                selected_value_field_name = 'abbreviation',
-                                                selected_value_field_value = 'CO')
+                                                # selected_value_field_name = 'abbreviation',
+                                                selected_value = 3)
 
         soup = BeautifulSoup(options_list, features="html.parser")
 
@@ -101,30 +101,12 @@ class StatesTests(TestCase):
         tag = soup.find('option', {'value': '3', 'selected': 'selected'})
         self.assertTrue(tag and tag.text == 'Colorado')
 
-    def test_create_options_list_with_numeric_value_and_abbreviation_as_text(self):
-        options_list = repo.create_options_list(items = self.get_states(),
-                                                text_field = 'abbreviation',
-                                                value_field = 'id',
-                                                selected_value_field_name = 'abbreviation',
-                                                selected_value_field_value = 'CO')
-
-        soup = BeautifulSoup(options_list, features="html.parser")
-
-        tag = soup.find('option', {'value': '1'})
-        self.assertTrue(tag and tag.text == 'AL')
-
-        tag = soup.find('option', {'value': '2'})
-        self.assertTrue(tag and tag.text == 'IN')
-
-        tag = soup.find('option', {'value': '3', 'selected': 'selected'})
-        self.assertTrue(tag and tag.text == 'CO')
-
     def test_create_options_list_with_numeric_value_selected_value_field(self):
         options_list = repo.create_options_list(items = self.get_states(),
                                                 text_field = 'province',
                                                 value_field = 'id',
-                                                selected_value_field_name = 'id',
-                                                selected_value_field_value = 2)
+                                                # selected_value_field_name = 'id',
+                                                selected_value = 2)
 
         soup = BeautifulSoup(options_list, features="html.parser")
 
