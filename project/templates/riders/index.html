@@ -1,163 +1,49 @@
-{% load mytags %}
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rider</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/tailwind.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/select.css' %}">
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}"/>
-    <style>
-        .orx {
-            border: 1px dashed red;
-        }
-        .ogx {
-            border: 1px dashed green;
-        }
-    </style>
-</head>
-<body>
+{% extends 'base/base.html' %}
 
-    <nav class="flex items-center justify-between flex-wrap bg-gray-600 p-6">
-        <div class="flex items-center flex-shrink-0 text-white mr-6">
-        <a href="/">
-            <img
-                src="{% static 'rp.svg'%}"
-                alt="triangle with all three sides equal"
-                height="50"
-                width="50"
-                class="inline"/>
-                <span class="pl-2 font-semibold text-xl tracking-tight"> Django form example</span>
-            </a>
-        </div>
-        <div class="block lg:hidden">
-            <button
-                class="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">
-                <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <title>Menu</title>
-                    <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
-                </svg>
-            </button>
-        </div>
+{% block head_content %}
+{% endblock %}
 
-        <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-            {% comment %} <div class="text-sm lg:flex-grow">
-                <a href="#responsive-header" class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
-                    Docs
-                </a>
-                <a href="#responsive-header" class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4">
-                    Examples
-                </a>
-                <a href="#responsive-header" class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white">
-                    Blog
-                </a>
-            </div> {% endcomment %}
-        </div>
-    </nav>
+{% block content %}
 
+<!--
+https://tailwindcomponents.com/component/responsive-table
+-->
 
-    <section class="flex items-center justify-center mt-8 px-4 md:px-0 og">
-        {% comment %} <form method="POST" action="/rider/{{rider_id}}"> {% endcomment %}
-        <form method="POST" action="{{form_action}}">
-            {% csrf_token %}
-            <input type="hidden" name="id" id="id" value="{{rider_id}}"/><br>
+<table class="border-collapse w-full">
+    <thead>
+        <tr>
+            <th class="p-3 font-bold uppercase bg-gray-200 text-left text-gray-600 border border-gray-300 hidden lg:table-cell">Rider</th>
+            <th class="p-3 font-bold uppercase bg-gray-200 text-left text-gray-600 border border-gray-300 hidden lg:table-cell">City</th>
+            <th class="p-3 font-bold uppercase bg-gray-200 text-left text-gray-600 border border-gray-300 hidden lg:table-cell">State</th>
+            <th class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
 
-                <div class="flex flex-wrap -mx-3 mb-6 or">
-                    <div class="w-full md:w-1/2 px-3 mb-2 md:mb-0 pb-3">
-                        <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="first-name">First Name</label>
-                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4
-                                      leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                id="first_name" name="first_name" type="text" placeholder="First name" value="{{form.first_name.value}}">
-                        <div>
-                            <ul class="pl-2 text-red-600">
-                                {{form.first_name.errors}}
-                            </ul>
-                        </div>
-                    </div>
+        {% for rider in riders %}
+        <tr class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
+            <td class="w-full lg:w-auto p-3 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
+                <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Rider</span>
+                {{rider.full_name}}
+            </td>
+            <td class="w-full lg:w-auto p-3 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
+                <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">City</span>
+                {{rider.city}}
+            </td>
+            <td class="w-full lg:w-auto p-3 text-gray-800 text-left border border-b block lg:table-cell relative lg:static">
+                <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">State</span>
+                {{rider.state.province}}
+            </td>
+            <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static">
+                <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Actions</span>
+                <a href="/riders/{{rider.id}}/edit" class="text-blue-400 hover:text-blue-600 underline">Edit</a>
+                <a href="#" class="text-blue-400 hover:text-blue-600 underline pl-6">Remove</a>
+            </td>
+        </tr>
+        {% endfor %}
 
-                    <div class="w-full md:w-1/2 px-3 pb-3">
-                        <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="last_name">Last Name</label>
-                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4
-                                      leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                id="last_name" name="last_name" type="text" placeholder="Last name" value="{{form.last_name.value}}">
-                        <ul class="pl-2 text-red-600">
-                                {{form.last_name.errors}}
-                        </ul>
-                    </div>
-                </div>
+    </tbody>
+</table>
 
-                <div class="flex flex-wrap -mx-3 mb-6 or">
-                    <div class="w-full px-3">
-                        <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="address">Address</label>
-                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4
-                                      mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                id="address" name="address" type="text" value="{{form.address.value}}">
-                        <ul class="pl-2 text-red-600">
-                            {{form.address.errors}}
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="flex flex-wrap -mx-3 mb-6 or">
-                    <div class="w-full px-3">
-                        <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="city">City</label>
-                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4
-                                      mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                id="city" name="city" type="text" value="{{form.city.value}}">
-                        <ul class="pl-2 text-red-600">
-                            {{form.city.errors}}
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="flex flex-wrap -mx-3 mb-6 pb-3 or">
-                    <div class="w-full px-3">
-                        <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="state">State</label>
-                        <select name="state" id="state" class="select-css">
-                            {{states_options_list | safe}}
-                        </select>
-
-                        <!--
-                        This is the Tailwind select that flashes a large in the lower half of the screen. This
-                        is related to the SVG used for the dropdown arrow. I'm using the Filament group select
-                        tag styling for now to avoid this.
-                        -->
-                        {% comment %} <div class="relative">
-                            <select
-                                class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700
-                                    py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                id="state" name="state">
-                                {{options_list | safe}}
-                            </select>
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
-                            </div>
-                        </div> {% endcomment %}
-
-                    </div>
-                </div>
-
-                <div class="flex flex-wrap -mx-3 mb-6 or">
-                    <div class="w-full px-3">
-                        <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="phone">Phone</label>
-                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4
-                                      mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                id="phone" name="phone" type="text" value="{{form.phone.value}}">
-                        <ul class="pl-2 text-red-600">
-                            {{form.phone.errors}}
-                        </ul>
-                    </div>
-                </div>
-
-            <div>
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                        type="submit">Submit</button>
-            </div>
-        </form>
-    </section>
-</body>
-</html>
+{% endblock%}
 

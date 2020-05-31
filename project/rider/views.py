@@ -10,10 +10,10 @@ from core import html_helpers
 
 def convert_states_dict_to_options(states_dict, selected_state_id):
     select_markup = html_helpers.create_options_list(items = states_dict,
-                                             text_field = 'province',
-                                             value_field = 'id',
-                                             selected_value = selected_state_id,
-                                             option_tag_attrs = {})
+                                                     text_field = 'province',
+                                                     value_field = 'id',
+                                                     selected_value = selected_state_id,
+                                                     option_tag_attrs = {})
     return select_markup
 
 def get_states_options_list(request, selected_state_id):
@@ -25,7 +25,6 @@ def get_states_options_list(request, selected_state_id):
     #     states_dict = get_states_dict()
     #     request.session['states_dict'] = states_dict
     states_dict = get_states_dict()
-
     return convert_states_dict_to_options(states_dict, selected_state_id)
 
 class Edit(View):
@@ -44,7 +43,7 @@ class Edit(View):
                     'form_action' : f'/riders/{id}'
                     }
 
-        return render(request, 'riders/index.html', context)
+        return render(request, 'riders/show.html', context)
 
 class Update(View):
     def post(self, request, id):
@@ -67,9 +66,9 @@ class Update(View):
 
         if form.is_valid():
             form.save()
-            return redirect('index')
+            return redirect('riders_list')
         else:
-            return render(request, 'riders/index.html', context )
+            return render(request, 'riders/show.html', context )
 
 class New(View):
     def get(self, request):
@@ -85,7 +84,7 @@ class New(View):
                    'rider_id': -1,
                    'states_options_list': states_options_list,
                    'form_action' : '/riders'}
-        return render(request, 'riders/index.html', context)
+        return render(request, 'riders/show.html', context)
 
 class Create(View):
     def post(self, request):
@@ -105,18 +104,20 @@ class Create(View):
 
         if form.is_valid():
             form.save()
-            return redirect('index')
+            return redirect('riders_list')
         else:
-            return render(request, 'riders/index.html', context)
+            return render(request, 'riders/show.html', context)
 
 class Index(View):
 
     def get(self, request):
         '''
-        Display form for adding a entity.
+        Display a list of riders.
         '''
-        rider = Rider.objects.get(id=1)
+        riders = Rider.objects.order_by('last_name')
 
-        context = {'form':rider}
+        context = {'riders': riders,
+                  }
+
         if request.method == 'GET':
             return render(request, 'riders/index.html', context)

@@ -17,10 +17,8 @@ from django.contrib import admin
 from django.urls import path, include
 
 from rider.views import Index as RiderIndex
-
 from rider.views import New as RiderNew
 from rider.views import Create as RiderCreate
-
 from rider.views import Edit as RiderEdit
 from rider.views import Update as RiderUpdate
 
@@ -29,8 +27,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # !! no URLs are necessary in the app.
+    path('riders/', RiderIndex.as_view()),
     path('riders/<int:id>/edit', RiderEdit.as_view()),
     path('riders/<int:id>', RiderUpdate.as_view()),
     path('riders/new', RiderNew.as_view()),
-    path('riders', RiderCreate.as_view()),
+    path('riders/', RiderCreate.as_view(), name="riders_list"),
 ]
