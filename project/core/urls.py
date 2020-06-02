@@ -33,7 +33,7 @@ urlpatterns = [
     path('states/', StatesIndex.as_view(), name='states' ),
 
     path('riders', RiderIndex.as_view(), name='riders_list'),
-    path('riders/create', RiderCreate.as_view()),
+    path('riders', RiderCreate.as_view()),
     path('riders/<int:id>/edit', RiderEdit.as_view()),
     path('riders/<int:id>', RiderUpdate.as_view()),
     path('riders/new', RiderNew.as_view()),
