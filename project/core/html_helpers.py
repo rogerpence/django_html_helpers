@@ -19,12 +19,12 @@ def create_options_list(items,
                         option_tag_attrs = {}):
     option_list = []
 
-    # if selected_value is None:
-    #     option_tag_attrs['value'] = '0'
-    #     option_tag_attrs['selected'] = 'selected'
-    #     option_list.append(create_tag('option', **option_tag_attrs))
-    #     option_list.append('Select...')
-    #     option_list.append('</option>')
+    if selected_value is None or selected_value == '':
+        option_tag_attrs['value'] = ''
+        option_tag_attrs['selected'] = 'selected'
+        option_list.append(create_tag('option', **option_tag_attrs))
+        option_list.append('Select...')
+        option_list.append('</option>')
 
     for item in items:
         if str(item[value_field]) == str(selected_value):

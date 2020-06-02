@@ -13,8 +13,8 @@ class RiderForm(forms.ModelForm):
             raise forms.ValidationError('You cannot be roger')
         return data
 
-    # def clean_state(self):
-    #     data = self.cleaned_data.get('first_name')
-    #     if data == '*None':
-    #         raise forms.ValidationError('Please select a state')
-    #     return data
+    def clean_state(self):
+        data = self.cleaned_data.get('state')
+        if data == None or data == '':
+            raise forms.ValidationError('Please select a state')
+        return data

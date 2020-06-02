@@ -1,27 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from . models import State
+from . models import State, Person
 from core import html_helpers
+from django.views import View
+from . forms import PersonForm
 
-def index(request):
-    option_tag_attrs = {}
-    # States_list needs to be a dictionary--note use of values() in the
-    # to ensure that.
-    states_list = (State.objects
-                        .all()
-                        .order_by('province')
-                        .values('id', 'province', 'abbreviation'))
+class Index(View):
+    def get(self, request):
+        form = PersonForm()
 
-
-
-    select_markup = html_helpers.create_options_list(items = states_list,
-                                             text_field = 'province',
-                                             value_field = 'id',
-                                             selected_value = '18',
-                                             option_tag_attrs = option_tag_attrs)
-
-    context = {
-        "select_states": select_markup,
-    }
-
-    return render(request,'states/index.html', context)
+        context = {
+            'form': form
+        }
+        return render(request,'states/index.html', context)

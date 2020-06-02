@@ -68,8 +68,9 @@ class Update(View):
         Update an existing entity.
         '''
         rider_id = request.POST.get('id')
-
         state_id =  request.POST.get('state')
+        if state_id == '':
+            state_id = None
         states_options_list = get_states_options_list(request, state_id)
 
         rider = get_object_or_404(Rider, pk=id)
@@ -100,7 +101,7 @@ class New(View):
         context = {'form': form,
                    'rider_id': -1,
                    'states_options_list': states_options_list,
-                   'form_action' : '/riders'}
+                   'form_action' : '/riders/create'}
         return render(request, 'riders/show.html', context)
 
 class Create(View):
@@ -117,7 +118,7 @@ class Create(View):
         context = {'form': form,
                    'rider_id': -1,
                    'states_options_list': states_options_list,
-                   'form_action' : '/riders'}
+                   'form_action' : '/riders/create'}
 
         if form.is_valid():
             form.save()

@@ -118,6 +118,9 @@
                         <select name="state" id="state" class="select-css">
                             {{states_options_list | safe}}
                         </select>
+                        <ul class="pl-2 text-red-600">
+                            {{form.state.errors}}
+                        </ul>
 
                         <!--
                         This is the Tailwind select that flashes a large in the lower half of the screen. This

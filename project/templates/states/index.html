@@ -6,6 +6,18 @@
     <title>Select tag</title>
 </head>
 <body>
+  <h2>Person Form</h2>
+  <form method="post">
+    {% csrf_token %}
+    <table>
+      {{ form.as_p }}
+    </table>
+    <div class="states">
+    {{form.state}}
+    </div>
+    <button type="submit">Save</button>
+  </form>
+{% comment %}
 <a href="riders/">riders/</a>
 <br>
 <a href="riders/1/edit">riders/1/edit</a>
@@ -20,7 +32,7 @@
 <div>
 <select>
 {{select_states | safe}}
-</select>
+</select> {% endcomment %}
 
 </div>
 
