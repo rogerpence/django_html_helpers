@@ -6,71 +6,97 @@
 {% block content %}
 
 <!--
+Responsive table
 https://tailwindcomponents.com/component/responsive-table
 -->
 
 {% comment %} <a href="riders/new">riders/new</a> {% endcomment %}
-<a href="{% url 'new-rider' %}">riders/new</a>
 
-<div>
+<div class="px-4">
+    <div>
+        <a href="{% url 'new-rider' %}" class="bg-gray-300 hover:bg-gray-400 text-gray-600
+                       font-bold py-2 px-4 mr-1 rounded inline-flex items-center mt-2 mb-2">
+            <i class="fas fa-plus"></i>&nbsp;New rider
+        </a>
+    </div>
 
-{% comment %} https://www.youtube.com/watch?v=Z8MDdDyB_6A {% endcomment %}
+    <!--
+    Add pagination
+    https://www.youtube.com/watch?v=Z8MDdDyB_6A
+    -->
 
+    <table class="border-collapse w-full">
+        <thead>
+            <tr>
+                <th
+                    class="p-3 font-bold uppercase bg-gray-200 text-left text-gray-600 border border-gray-300 hidden lg:table-cell">
+                    Rider</th>
+                <th
+                    class="p-3 font-bold uppercase bg-gray-200 text-left text-gray-600 border border-gray-300 hidden lg:table-cell">
+                    City</th>
+                <th
+                    class="p-3 font-bold uppercase bg-gray-200 text-left text-gray-600 border border-gray-300 hidden lg:table-cell">
+                    State</th>
+                <th
+                    class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                    Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rider in riders %}
+            <tr
+                class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
+                <td
+                    class="w-full lg:w-auto p-3 text-gray-800 text-center lg:text-left border border-b block lg:table-cell relative lg:static">
+                    <span
+                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Rider</span>
+                    {{rider.full_name}}
+                </td>
+                <td
+                    class="w-full lg:w-auto p-3 text-gray-800 text-center lg:text-left  border border-b block lg:table-cell relative lg:static">
+                    <span
+                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">City</span>
+                    {{rider.city}}
+                </td>
+                <td
+                    class="w-full lg:w-auto p-3 text-gray-800 text-center lg:text-left  border border-b block lg:table-cell relative lg:static">
+                    <span
+                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">State</span>
+                    {{rider.state.province}}
+                </td>
+                <td
+                    class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static">
+                    <span
+                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Actions</span>
+                    <a href="/riders/{{rider.id}}/edit" class="text-blue-400 hover:text-blue-600 underline">Edit</a>
+                    <a href="#" class="text-blue-400 hover:text-blue-600 underline pl-6">Remove</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-{% for num in riders.paginator.page_range %}
-    {% if riders.number == num %}
-        <strong>{{num}}</strong>
-    {% elif num > riders.number|add:'-3' and num < riders.number|add:'3' %}
-        {{ num }}
-    {% endif %}
-{% endfor %}
-<br>
-
-
-{{riders.number}}<br>
-{{riders.paginator.count}}<br>
-{{riders.paginator.num_pages}}<br>
-{{riders.paginator.page_range}}<br>
-{{riders.has_next}}<br>
-{{riders.has_previous}}<br>
+    <div class="flex justify-center mt-4">
+        <a href="?page=1" class="bg-gray-300 hover:bg-gray-400 text-gray-600
+                       font-bold py-2 px-4 mr-1 rounded inline-flex items-center">
+            <i class="fas fa-chevron-double-left"></i>
+        </a>
+        <a href="?page={{riders.number | add:'-1'}}" class="bg-gray-300 hover:bg-gray-400 text-gray-600
+                       font-bold py-2 px-4 mr-1 rounded inline-flex items-center">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+        <a href="?page={{riders.number | add:'1'}}" class="bg-gray-300 hover:bg-gray-400 text-gray-600
+                       font-bold py-2 px-4 mr-1 rounded inline-flex items-center">
+            <i class="fas fa-chevron-right"></i>
+        </a>
+        <a href="?page={{riders.paginator.num_pages}}" class="bg-gray-300 hover:bg-gray-400 text-gray-600
+                       font-bold py-2 px-4 mr-1 rounded inline-flex items-center">
+            <i class="fas fa-chevron-double-right"></i>
+        </a>
+    </div>
+    <div class="flex justify-center mt-2 text-gray-600">
+        Page {{riders.number}} of {{riders.paginator.num_pages}}<br>
+    </div>
 
 </div>
-
-<table class="border-collapse w-full">
-    <thead>
-        <tr>
-            <th class="p-3 font-bold uppercase bg-gray-200 text-left text-gray-600 border border-gray-300 hidden lg:table-cell">Rider</th>
-            <th class="p-3 font-bold uppercase bg-gray-200 text-left text-gray-600 border border-gray-300 hidden lg:table-cell">City</th>
-            <th class="p-3 font-bold uppercase bg-gray-200 text-left text-gray-600 border border-gray-300 hidden lg:table-cell">State</th>
-            <th class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-
-        {% for rider in riders %}
-        <tr class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
-            <td class="w-full lg:w-auto p-3 text-gray-800 text-center lg:text-left border border-b block lg:table-cell relative lg:static">
-                <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Rider</span>
-                {{rider.full_name}}
-            </td>
-            <td class="w-full lg:w-auto p-3 text-gray-800 text-center lg:text-left  border border-b block lg:table-cell relative lg:static">
-                <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">City</span>
-                {{rider.city}}
-            </td>
-            <td class="w-full lg:w-auto p-3 text-gray-800 text-center lg:text-left  border border-b block lg:table-cell relative lg:static">
-                <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">State</span>
-                {{rider.state.province}}
-            </td>
-            <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static">
-                <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Actions</span>
-                <a href="/riders/{{rider.id}}/edit" class="text-blue-400 hover:text-blue-600 underline">Edit</a>
-                <a href="#" class="text-blue-400 hover:text-blue-600 underline pl-6">Remove</a>
-            </td>
-        </tr>
-        {% endfor %}
-
-    </tbody>
-</table>
-
 {% endblock%}
-
