@@ -9,7 +9,32 @@
 https://tailwindcomponents.com/component/responsive-table
 -->
 
-<a href="riders/new">riders/new</a>
+{% comment %} <a href="riders/new">riders/new</a> {% endcomment %}
+<a href="{% url 'new-rider' %}">riders/new</a>
+
+<div>
+
+{% comment %} https://www.youtube.com/watch?v=Z8MDdDyB_6A {% endcomment %}
+
+
+{% for num in riders.paginator.page_range %}
+    {% if riders.number == num %}
+        <strong>{{num}}</strong>
+    {% elif num > riders.number|add:'-3' and num < riders.number|add:'3' %}
+        {{ num }}
+    {% endif %}
+{% endfor %}
+<br>
+
+
+{{riders.number}}<br>
+{{riders.paginator.count}}<br>
+{{riders.paginator.num_pages}}<br>
+{{riders.paginator.page_range}}<br>
+{{riders.has_next}}<br>
+{{riders.has_previous}}<br>
+
+</div>
 
 <table class="border-collapse w-full">
     <thead>

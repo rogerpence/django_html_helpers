@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.views import View
+from django.urls import reverse_lazy, reverse
+from django.core.paginator import Paginator
 from .models import Rider
 from .forms import RiderForm
 from states.models import State
@@ -54,7 +56,8 @@ class Edit(View):
         context =  {'form':form,
                     'rider_id' : id,
                     'states_options_list': states_options_list,
-                    'form_action' : f'/riders/{id}'
+                    'form_action': reverse('update-rider', args=[id])
+                    # 'form_action' : f'/riders/{id}'
                     }
 
         sw.stop()
@@ -79,7 +82,8 @@ class Update(View):
         context =  {'form':form,
                     'rider_id' : id,
                     'states_options_list': states_options_list,
-                    'form_action' : f'/riders/{id}'
+                    'form_action': reverse('update-rider', args=[id])
+                    # 'form_action' : f'/riders/{id}'
                     }
 
         if form.is_valid():
@@ -101,10 +105,53 @@ class New(View):
         context = {'form': form,
                    'rider_id': -1,
                    'states_options_list': states_options_list,
-                   'form_action' : '/riders/create'}
+                   'form_action' : reverse_lazy('create-rider')}
         return render(request, 'riders/show.html', context)
 
-class Create(View):
+# class Create(View):
+#     def post(self, request):
+#         '''
+#         Add a new entity to database.
+#         '''
+#         state_id =  request.POST.get('state')
+#         states_options_list = get_states_options_list(request, state_id)
+
+#         rider = Rider()
+#         form = RiderForm(request.POST or None, instance=rider)
+
+#         context = {'form': form,
+#                    'rider_id': -1,
+#                    'states_options_list': states_options_list,
+#                    'form_action' : reverse_lazy('create-rider')}
+
+#         if form.is_valid():
+#             form.save()
+#             return redirect('riders_list')
+#         else:
+#             return render(request, 'riders/show.html', context)
+
+class Index(View):
+    def get(self, request):
+        '''
+        Display the list of riders.
+        '''
+        sw = StopWatch('Fetch 200 riders')
+        sw.start()
+
+        riders = Rider.objects.order_by('last_name')
+        paginator = Paginator(riders, 8)
+
+        page_number = request.GET.get('page', 1)
+        riders_page = paginator.get_page(page_number)
+
+        context = {'riders': riders_page,
+                  }
+
+        sw.stop()
+        sw.show_results()
+        if request.method == 'GET':
+            return render(request, 'riders/index.html', context)
+
     def post(self, request):
         '''
         Add a new entity to database.
@@ -118,27 +165,10 @@ class Create(View):
         context = {'form': form,
                    'rider_id': -1,
                    'states_options_list': states_options_list,
-                   'form_action' : '/riders/create'}
+                   'form_action' : reverse_lazy('create-rider')}
 
         if form.is_valid():
             form.save()
             return redirect('riders_list')
         else:
             return render(request, 'riders/show.html', context)
-
-class Index(View):
-    def get(self, request):
-        '''
-        Display the list of riders.
-        '''
-        sw = StopWatch('Fetch 200 riders')
-        sw.start()
-        riders = Rider.objects.order_by('last_name')
-
-        context = {'riders': riders,
-                  }
-
-        sw.stop()
-        sw.show_results()
-        if request.method == 'GET':
-            return render(request, 'riders/index.html', context)
