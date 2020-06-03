@@ -13,10 +13,14 @@ https://tailwindcomponents.com/component/responsive-table
 {% comment %} <a href="riders/new">riders/new</a> {% endcomment %}
 
 <div class="px-4">
+    <div class="flex justify-center items-center text-gray-600 text-3xl mt-4">
+    Texas Grand Tour Riders
+    </div>
+
     <div>
         <a href="{% url 'new-rider' %}" class="bg-gray-300 hover:bg-gray-400 text-gray-600
-                       font-bold py-2 px-4 mr-1 rounded inline-flex items-center mt-2 mb-2">
-            <i class="fas fa-plus"></i>&nbsp;New rider
+                       py-2 px-4 mr-1 rounded inline-flex items-center mt-2 mb-2">
+            <i class="far fa-plus-circle"></i>&nbsp;New rider
         </a>
     </div>
 
@@ -24,6 +28,7 @@ https://tailwindcomponents.com/component/responsive-table
     Add pagination
     https://www.youtube.com/watch?v=Z8MDdDyB_6A
     -->
+
 
     <table class="border-collapse w-full">
         <thead>
@@ -33,10 +38,10 @@ https://tailwindcomponents.com/component/responsive-table
                     Rider</th>
                 <th
                     class="p-3 font-bold uppercase bg-gray-200 text-left text-gray-600 border border-gray-300 hidden lg:table-cell">
-                    City</th>
+                    City/State</th>
                 <th
                     class="p-3 font-bold uppercase bg-gray-200 text-left text-gray-600 border border-gray-300 hidden lg:table-cell">
-                    State</th>
+                    Phone</th>
                 <th
                     class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
                     Actions</th>
@@ -45,7 +50,10 @@ https://tailwindcomponents.com/component/responsive-table
         <tbody>
             {% for rider in riders %}
             <tr
-                class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
+                class="bg-white lg:hover:bg-gray-300 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0
+                 {% cycle 'bg-green-100' 'bg-gray-200' %}
+                 "
+                >
                 <td
                     class="w-full lg:w-auto p-3 text-gray-800 text-center lg:text-left border border-b block lg:table-cell relative lg:static">
                     <span
@@ -55,26 +63,38 @@ https://tailwindcomponents.com/component/responsive-table
                 <td
                     class="w-full lg:w-auto p-3 text-gray-800 text-center lg:text-left  border border-b block lg:table-cell relative lg:static">
                     <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">City</span>
-                    {{rider.city}}
+                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">City/State</span>
+                    {{rider.city_state}}
                 </td>
                 <td
                     class="w-full lg:w-auto p-3 text-gray-800 text-center lg:text-left  border border-b block lg:table-cell relative lg:static">
                     <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">State</span>
-                    {{rider.state.province}}
+                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Phone</span>
+                    {{rider.phone}}
                 </td>
                 <td
                     class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static">
                     <span
                         class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Actions</span>
-                    <a href="/riders/{{rider.id}}/edit" class="text-blue-400 hover:text-blue-600 underline">Edit</a>
-                    <a href="#" class="text-blue-400 hover:text-blue-600 underline pl-6">Remove</a>
+                    <a href="/riders/{{rider.id}}/edit" class="bg-gray-300 hover:bg-gray-400 text-gray-600
+                                                               py-2 px-4 mr-1 rounded inline-flex items-center mt-2 mb-2"" title="Edit">
+                                                               <i class="far fa-edit"></i><span>&nbsp;Edit</span></a>
+
+                    <a href="#" class="bg-gray-300 hover:bg-gray-400 text-gray-600
+                                               py-2 px-4 mr-1 rounded inline-flex items-center mt-2 mb-2" title="Delete">
+                                               <i class="far fa-minus-circle"></i><span>&nbsp;Delete</span></a>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+
+        {% comment %} <a href="{% url 'new-rider' %}" class="bg-gray-300 hover:bg-gray-400 text-gray-600
+                       font-bold py-2 px-4 mr-1 rounded inline-flex items-center mt-2 mb-2">
+            <i class="far fa-plus-circle"></i>&nbsp;New rider
+        </a> {% endcomment %}
+
+
 
     <div class="flex justify-center mt-4">
         <a href="?page=1" class="bg-gray-300 hover:bg-gray-400 text-gray-600

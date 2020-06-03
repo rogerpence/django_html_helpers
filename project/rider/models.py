@@ -20,5 +20,9 @@ class Rider(models.Model):
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
 
+    @property
+    def city_state(self):
+        return f'{self.city}, {self.state.abbreviation}'
+
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
