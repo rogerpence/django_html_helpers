@@ -97,6 +97,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+if DEBUG:
+    import mimetypes
+    mimetypes.add_type("application/javascript", ".js", True)
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 

@@ -1,6 +1,31 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
 {% block head_content %}
+    <style>
+        .bg-smoke {
+            background-color: rgba( 0,0,0,.5);
+        }
+
+        .fade-enter-active, .fade-leave-active {
+            transition: opacity .5s;
+        }
+        .fade-enter, .fade-leave-to {
+            opacity: 0;
+        }
+
+        @media all and (min-width: 1024px) {
+            table.riders-list td:nth-child(1) {
+                width: 35%;
+            }
+            table.riders-list td:nth-child(2) {
+                width: 25%;
+            }
+            table.riders-list td:nth-child(3) {
+                width: 15%;
+            }
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
@@ -12,7 +37,12 @@ https://tailwindcomponents.com/component/responsive-table
 
 {% comment %} <a href="riders/new">riders/new</a> {% endcomment %}
 
-<div class="px-4">
+<div class="px-4" id="app">
+
+{% comment %} <button @click="toggleModal('cancel')" class="bg-teal-500 text-white px-3 py-1 rounded-full">
+    View modal
+</button> {% endcomment %}
+
     <div class="flex justify-center items-center text-gray-600 text-3xl mt-4">
     Texas Grand Tour Riders
     </div>
@@ -30,7 +60,13 @@ https://tailwindcomponents.com/component/responsive-table
     -->
 
 
-    <table class="border-collapse w-full">
+    <table class="riders-list border-collapse w-full">
+        {% comment %} <colgroup>
+            <col width="35%">
+            <col width="25%">
+            <col width="15%">
+            <col width="25%">
+        </colgroup> {% endcomment %}
         <thead>
             <tr>
                 <th
@@ -49,7 +85,7 @@ https://tailwindcomponents.com/component/responsive-table
         </thead>
         <tbody>
             {% for rider in riders %}
-            <tr
+            <tr data-row-id="row-{{ forloop.counter0 }}" data-rider-id="{{rider.id}}"
                 class="bg-white lg:hover:bg-gray-300 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0
                  {% cycle 'bg-green-100' 'bg-gray-200' %}
                  "
@@ -58,7 +94,7 @@ https://tailwindcomponents.com/component/responsive-table
                     class="w-full lg:w-auto p-3 text-gray-800 text-center lg:text-left border border-b block lg:table-cell relative lg:static">
                     <span
                         class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Rider</span>
-                    {{rider.full_name}}
+                    <span data-rider-name="{{forloop.counter0}}">{{rider.full_name}}</span>
                 </td>
                 <td
                     class="w-full lg:w-auto p-3 text-gray-800 text-center lg:text-left  border border-b block lg:table-cell relative lg:static">
@@ -67,7 +103,7 @@ https://tailwindcomponents.com/component/responsive-table
                     {{rider.city_state}}
                 </td>
                 <td
-                    class="w-full lg:w-auto p-3 text-gray-800 text-center lg:text-left  border border-b block lg:table-cell relative lg:static">
+                    class="w-full lg:w-auto p-3 text-gray-800 text-center lg:text-left border border-b block lg:table-cell relative lg:static">
                     <span
                         class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Phone</span>
                     {{rider.phone}}
@@ -77,12 +113,22 @@ https://tailwindcomponents.com/component/responsive-table
                     <span
                         class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Actions</span>
                     <a href="/riders/{{rider.id}}/edit" class="bg-gray-300 hover:bg-gray-400 text-gray-600
-                                                               py-2 px-4 mr-1 rounded inline-flex items-center mt-2 mb-2"" title="Edit">
+                                                               py-2 px-4 mr-1 rounded inline-flex items-center mt-2 mb-2" title="Edit">
                                                                <i class="far fa-edit"></i><span>&nbsp;Edit</span></a>
 
+                    <button  @click="showModal($event)" data-action="roger-pence" data-row-number="{{ forloop.counter0 }}"
+                                               class="bg-gray-300 hover:bg-gray-400 text-gray-600
+                                               py-2 px-4 mr-1 rounded inline-flex items-center mt-2 mb-2" title="Delete">
+                                               <i class="far fa-minus-circle"></i><span>&nbsp;Delete</span></button>
+
+
+
+{% comment %}
                     <a href="#" class="bg-gray-300 hover:bg-gray-400 text-gray-600
                                                py-2 px-4 mr-1 rounded inline-flex items-center mt-2 mb-2" title="Delete">
-                                               <i class="far fa-minus-circle"></i><span>&nbsp;Delete</span></a>
+                                               <i class="far fa-minus-circle"></i><span>&nbsp;Delete</span></a> {% endcomment %}
+
+
                 </td>
             </tr>
             {% endfor %}
@@ -118,5 +164,32 @@ https://tailwindcomponents.com/component/responsive-table
         Page {{riders.number}} of {{riders.paginator.num_pages}}<br>
     </div>
 
+    <transition name="fade">
+        <div v-if="visible"
+                class="bg-smoke absolute top-0 h-screen 50vh w-full
+                    flex justify-center items-center">
+            <div class="bg-white p-4 rounded w-3/4 md:w-1/3 border border-solid border-gray-500">
+                <div class="flex justify-center text-1xl md:text-2xl" v-html="message">
+
+                </div>
+                <div class="flex justify-center mt-4">
+                    <button @click="closeModal('yes')"
+                            class="w-24 bg-green-500 text-white mt-4 mr-6 px-4
+                                    py-2 rounded-md">
+                        Yes
+                    </button>
+                    <button @click="closeModal('no')"
+                            class="w-24 bg-red-500 text-white mt-4 px-4 py-2
+                                    rounded-md">
+                        No
+                    </button>
+                </div>
+            </div>
+        </div>
+    </transition>
+
 </div>
+
+<script type="module" src="{% static 'js/main.js' %}"></script>
+
 {% endblock%}
