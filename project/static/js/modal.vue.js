@@ -3,33 +3,26 @@ export function modal() {
         el: '#app',
         data: {
             visible: false,
-            deleteAction: 'delete-rider.html',
-            message: 'OK to delete<br> Neil Young\'s account?',
-            currentAction: '',
-            currentRow: 0
+            message: '',
+            deleteUrl: ''
         },
         methods: {
             showModal(e) {
-                this.currentAction = e.currentTarget.getAttribute('data-action');
-                this.currentRow = e.currentTarget.getAttribute('data-row-number');
-                console.log(this.currentAction);
-                console.log(this.currentRow);
+                const riderId =  e.currentTarget.getAttribute('data-rider-id');
+                const riderName = e.currentTarget.getAttribute('data-rider-full-name');
+
+                this.deleteUrl = `rider/${riderId}/delete`;
+                this.message = `OK to delete ${riderName}'s account?`;
                 this.visible = true;
             },
-            closeModal(e) {
-                console.log(this.currentAction);
+            closeModal(action) {
+                console.log(action);
+                if (action === 'yes') {
+                    console.log(this.deleteUrl);
+                    location.href = this.deleteUrl;
+                }
+
                 this.visible = false;
-
-                // name = document.querySelector('span[data-rider-name="1"]');
-                // riderName = name.innerText
-
-                // if (confirm == 'yes') {
-                //     console.log('deleted selected');
-                //     // location.href = this.deleteAction;
-                // }
-                // else {
-                //     console.log('delete not selected');
-                // }
             }
         }
     })

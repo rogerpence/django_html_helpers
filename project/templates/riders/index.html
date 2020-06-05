@@ -25,6 +25,10 @@
                 width: 15%;
             }
         }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
     </style>
 {% endblock %}
 
@@ -47,12 +51,37 @@ https://tailwindcomponents.com/component/responsive-table
     Texas Grand Tour Riders
     </div>
 
-    <div>
-        <a href="{% url 'new-rider' %}" class="bg-gray-300 hover:bg-gray-400 text-gray-600
-                       py-2 px-4 mr-1 rounded inline-flex items-center mt-2 mb-2">
-            <i class="far fa-plus-circle"></i>&nbsp;New rider
-        </a>
+
+    <div class="mt-6 mb-4 flex justify-between xxborder xxborder-gray-400 xxborder-solid">
+        <div>
+            <a href="{% url 'new-rider' %}" class="bg-gray-300 hover:bg-gray-400 text-gray-600
+                        py-2 px-4 mr-1 rounded inline-flex items-center mt-2 mb-2">
+                <i class="far fa-plus-circle"></i>&nbsp;New rider
+            </a>
+        </div>
+
+        <div class="flex">
+            <form method="GET" action="rider/search/" class="inline">
+                <div class="bg-white pt-2 pb-2 flex">
+                    <span class="w-auto flex justify-end items-center rounded-tl rounded-bl bg-gray-300 text-gray-500 p-2">
+                        <i class="fal fa-search"></i>
+                    </span>
+                    <input name="search" class="bg-gray-300 w-full p-2" type="text" placeholder="Rider name">
+                    <div class="flex items-center bg-gray-300 pr-4  rounded-br rounded-tr ">
+                        <select name="search-by" id=""class="text-sm bg-gray-300 text-gray-700 pr-2">
+                            <option>Starts with</option>
+                            <option>Contains</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+            <div>
+            </div>
+            <div>
+            </div>
+        </div>
     </div>
+
 
     <!--
     Add pagination
@@ -85,39 +114,37 @@ https://tailwindcomponents.com/component/responsive-table
         </thead>
         <tbody>
             {% for rider in riders %}
-            <tr data-row-id="row-{{ forloop.counter0 }}" data-rider-id="{{rider.id}}"
+            <tr data-row-number="{{ forloop.counter0 }}"
                 class="bg-white lg:hover:bg-gray-300 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0
-                 {% cycle 'bg-green-100' 'bg-gray-200' %}
-                 "
-                >
+                 {% cycle 'bg-green-100' 'bg-gray-200' %}">
+                <td
+                    class="w-full lg:w-auto p-3 text-gray-800 text-center lg:text-left border border-b block lg:table-cell relative lg:static">
+                    <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Rider</span>
+                    <span class="text-lg lg:text-xl">{{rider.full_name_backwards}}</span>
+                </td>
                 <td
                     class="w-full lg:w-auto p-3 text-gray-800 text-center lg:text-left border border-b block lg:table-cell relative lg:static">
                     <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Rider</span>
-                    <span data-rider-name="{{forloop.counter0}}">{{rider.full_name}}</span>
-                </td>
-                <td
-                    class="w-full lg:w-auto p-3 text-gray-800 text-center lg:text-left  border border-b block lg:table-cell relative lg:static">
-                    <span
                         class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">City/State</span>
-                    {{rider.city_state}}
+                    <span class="text-lg lg:text-xl">{{rider.city_state}}</span>
                 </td>
                 <td
                     class="w-full lg:w-auto p-3 text-gray-800 text-center lg:text-left border border-b block lg:table-cell relative lg:static">
                     <span
                         class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Phone</span>
-                    {{rider.phone}}
+                    <span class="text-lg lg:text-xl">{{rider.phone}}</span>
                 </td>
                 <td
                     class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static">
-                    <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Actions</span>
-                    <a href="/riders/{{rider.id}}/edit" class="bg-gray-300 hover:bg-gray-400 text-gray-600
+                    {% comment %} <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Actions</span> {% endcomment %}
+
+                    <a href="/riders/{{rider.id}}/edit" class="bg-green-300 hover:bg-green-400 text-gray-600
                                                                py-2 px-4 mr-1 rounded inline-flex items-center mt-2 mb-2" title="Edit">
                                                                <i class="far fa-edit"></i><span>&nbsp;Edit</span></a>
 
-                    <button  @click="showModal($event)" data-action="roger-pence" data-row-number="{{ forloop.counter0 }}"
-                                               class="bg-gray-300 hover:bg-gray-400 text-gray-600
+                    <button  @click="showModal($event)"
+                                               data-rider-id="{{ rider.id }}" data-rider-full-name="{{rider.full_name}}"
+                                               class="bg-yellow-300 hover:bg-yellow-400 text-gray-600
                                                py-2 px-4 mr-1 rounded inline-flex items-center mt-2 mb-2" title="Delete">
                                                <i class="far fa-minus-circle"></i><span>&nbsp;Delete</span></button>
 

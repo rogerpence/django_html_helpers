@@ -20,6 +20,12 @@ class Rider(models.Model):
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
 
+    def full_name_backwards(self):
+        return f'{self.last_name}, {self.first_name}'
+
+    def full_name_backwards_upper(self):
+        return f'{self.last_name.upper()}, {self.first_name.upper()}'
+
     @property
     def city_state(self):
         return f'{self.city}, {self.state.abbreviation}'
