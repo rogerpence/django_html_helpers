@@ -135,16 +135,27 @@ class Index(View):
         '''
         Display the list of riders.
         '''
+        if 'search' in request.GET:
+            search =  request.GET.get('search')
+            print(search.upper())
+        else:
+            search = None
+
         sw = StopWatch('Fetch 200 riders')
         sw.start()
 
-        riders = Rider.objects.order_by('last_name')
+        if search:
+            riders = Rider.objects.filter(last_name__istartswith=search.upper()).order_by('last_name')
+        else:
+            riders = Rider.objects.order_by('last_name')
+
         paginator = Paginator(riders, 8)
 
         page_number = request.GET.get('page', 1)
         riders_page = paginator.get_page(page_number)
 
         context = {'riders': riders_page,
+                   'search': search if search is not None else ''
                   }
 
         sw.stop()

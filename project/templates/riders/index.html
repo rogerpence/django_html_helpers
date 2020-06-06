@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load mytags %}
 
 {% block head_content %}
     <style>
@@ -61,17 +62,17 @@ https://tailwindcomponents.com/component/responsive-table
         </div>
 
         <div class="flex">
-            <form method="GET" action="rider/search/" class="inline">
+            <form method="GET" action="{% url 'riders_list' %}" class="inline">
                 <div class="bg-white pt-2 pb-2 flex">
                     <span class="w-auto flex justify-end items-center rounded-tl rounded-bl bg-gray-300 text-gray-500 p-2">
                         <i class="fal fa-search"></i>
                     </span>
-                    <input name="search" class="bg-gray-300 w-full p-2" type="text" placeholder="Rider name">
+                    <input name="search" class="bg-gray-300 w-full p-2" type="text" placeholder="Rider name" value="{{search}}">
                     <div class="flex items-center bg-gray-300 pr-4  rounded-br rounded-tr ">
-                        <select name="search-by" id=""class="text-sm bg-gray-300 text-gray-700 pr-2">
+                        {% comment %} <select name="search-by" id=""class="text-sm bg-gray-300 text-gray-700 pr-2">
                             <option>Starts with</option>
                             <option>Contains</option>
-                        </select>
+                        </select> {% endcomment %}
                     </div>
                 </div>
             </form>
@@ -170,19 +171,19 @@ https://tailwindcomponents.com/component/responsive-table
 
 
     <div class="flex justify-center mt-4">
-        <a href="?page=1" class="bg-gray-300 hover:bg-gray-400 text-gray-600
+        <a href="{% page_search_qs 1 0 search %}" class="bg-gray-300 hover:bg-gray-400 text-gray-600
                        font-bold py-2 px-4 mr-1 rounded inline-flex items-center">
             <i class="fas fa-chevron-double-left"></i>
         </a>
-        <a href="?page={{riders.number | add:'-1'}}" class="bg-gray-300 hover:bg-gray-400 text-gray-600
+        <a href="{% page_search_qs riders.number -1 search %}" class="bg-gray-300 hover:bg-gray-400 text-gray-600
                        font-bold py-2 px-4 mr-1 rounded inline-flex items-center">
             <i class="fas fa-chevron-left"></i>
         </a>
-        <a href="?page={{riders.number | add:'1'}}" class="bg-gray-300 hover:bg-gray-400 text-gray-600
+        <a href="{% page_search_qs riders.number 1 search %}" class="bg-gray-300 hover:bg-gray-400 text-gray-600
                        font-bold py-2 px-4 mr-1 rounded inline-flex items-center">
             <i class="fas fa-chevron-right"></i>
         </a>
-        <a href="?page={{riders.paginator.num_pages}}" class="bg-gray-300 hover:bg-gray-400 text-gray-600
+        <a href="{% page_search_qs riders.paginator.num_pages 0 search %}" class="bg-gray-300 hover:bg-gray-400 text-gray-600
                        font-bold py-2 px-4 mr-1 rounded inline-flex items-center">
             <i class="fas fa-chevron-double-right"></i>
         </a>
