@@ -60,10 +60,12 @@ https://tailwindcomponents.com/component/responsive-table
 <div class="px-4" id="app">
 
     <div id="message-anchor" class="relative">
-        {% if flash %}
-        <div id="flash" class="p-2 bg-green-300 text-gray-600 inline rounded opacity-0 absolute top-0 left-0">
-            {{flash}}
-        </div>
+        {% if messages %}
+            <div>
+            {% for message in messages %}
+                 <div class="django-message django-message-{{message.tags}} p-2 bg-green-300 text-gray-600 inline opacity-0 rounded absolute left-0">{{message}}</div>
+            {% endfor %}
+            </div>
         {% endif %}
     </div>
 

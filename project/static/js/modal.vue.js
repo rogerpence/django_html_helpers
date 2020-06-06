@@ -12,18 +12,23 @@ export function modal() {
         },
         methods: {
             showFlashMessage() {
-                const flash = document.querySelector('#flash');
-                if (flash) {
+                const messages = document.querySelectorAll('.django-message');
+                let messageTop = 0;
+                messages.forEach((message, i)=> {
+                    message.style.top = `${messageTop}px`;
+                    messageTop +=60;
+
                     setTimeout(()=>{
-                        flash.classList.add('fade-in');
+                        message.classList.add('fade-in');
                     },300);
 
-                    // }, 300)
+                    // // }, 300)
                     setTimeout(() => {
-                        flash.classList.remove('fade-in');
-                        flash.classList.add('fade-out');
+                        message.classList.remove('fade-in');
+                        message.classList.add('fade-out');
                     }, 3000)
-                }
+
+                })
             },
             showModal(e) {
                 this.riderId =  e.currentTarget.getAttribute('data-rider-id');

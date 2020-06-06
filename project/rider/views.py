@@ -123,7 +123,7 @@ class New(View):
 
 #         context = {'form': form,
 #                    'rider_id': -1,
-#                    'states_options_list': states_options_list,
+#                    'states_options_list': states_options_list,f
 #                    'form_action' : reverse_lazy('create-rider')}
 
 #         if form.is_valid():
@@ -139,7 +139,9 @@ class Delete(View):
         route = reverse('riders_list')
         msg = urllib.parse.quote(f'{rider.full_name} successfully deleted.')
         url = f'{route}?flash={msg}'
-        return redirect(url)
+
+        request.session['deleted-msg'] = f'{rider.full_name} successfully deleted.'
+        return redirect(route)
 
 class Index(View):
     PAGE_SIZE = 8
@@ -148,14 +150,17 @@ class Index(View):
         '''
         Display the list of riders.
         '''
+        if 'deleted-msg' in request.session:
+            messages.info(request,request.session['deleted-msg'])
+            del request.session['deleted-msg']
 
         if 'search' in request.GET:
             search =  request.GET.get('search')
-            print(search.upper())
         else:
             search = None
 
-        msg = request.GET.get('flash') or None
+        # msg = request.GET.get('flash') or None
+        msg = None
 
         sw = StopWatch('Fetch 200 riders')
         sw.start()
@@ -164,7 +169,7 @@ class Index(View):
             riders = Rider.objects.filter(last_name__istartswith=search.upper()).order_by('last_name')
 
         if (search and len(riders) == 0):
-            msg = f'Search for "{search}" failed'
+            messages.info(request, f'Search for "{search}" failed')
             search = None
 
         if (search and len(riders) == 0) or not search:
@@ -177,13 +182,20 @@ class Index(View):
 
         context = {'riders': riders_page,
                    'search': search if search is not None else '',
-                   'flash': msg
+                   'flash': msg,
+                   'msg_top': 0
                   }
 
         sw.stop()
         sw.show_results()
         if request.method == 'GET':
-            messages.add_message(request, messages.INFO, 'Hello world.')
+            # messages.info(request,'info message')
+            # messages.success(request,'success message 1')
+            # messages.success(request,'success message 2')
+            # messages.warning(request,'warning message')
+            # messages.debug(request,'debug message')
+            # messages.error(request,'error message')
+
             return render(request, 'riders/index.html', context)
 
     def post(self, request):
