@@ -4,14 +4,32 @@ export function modal() {
         data: {
             visible: false,
             message: '',
-            deleteUrl: ''
+            deleteUrl: '',
+            riderId: '',
+        },
+        mounted() {
+            this.showFlashMessage()
         },
         methods: {
+            showFlashMessage() {
+                const flash = document.querySelector('#flash');
+                if (flash) {
+                    setTimeout(()=>{
+                        flash.classList.add('fade-in');
+                    },300);
+
+                    // }, 300)
+                    setTimeout(() => {
+                        flash.classList.remove('fade-in');
+                        flash.classList.add('fade-out');
+                    }, 3000)
+                }
+            },
             showModal(e) {
-                const riderId =  e.currentTarget.getAttribute('data-rider-id');
+                this.riderId =  e.currentTarget.getAttribute('data-rider-id');
                 const riderName = e.currentTarget.getAttribute('data-rider-full-name');
 
-                this.deleteUrl = `rider/${riderId}/delete`;
+                this.deleteUrl = `/riders/${this.riderId}/delete/`;
                 this.message = `OK to delete ${riderName}'s account?`;
                 this.visible = true;
             },
@@ -19,7 +37,7 @@ export function modal() {
                 console.log(action);
                 if (action === 'yes') {
                     console.log(this.deleteUrl);
-                    location.href = this.deleteUrl;
+                    // location.href = this.deleteUrl;
                 }
 
                 this.visible = false;

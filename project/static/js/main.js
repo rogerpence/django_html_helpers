@@ -1,3 +1,5 @@
 import {modal} from './modal.vue.js';
 
-modal();
+document.addEventListener("DOMContentLoaded", function(){
+    modal();
+});

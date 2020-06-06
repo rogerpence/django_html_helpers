@@ -20,6 +20,7 @@ from rider.views import Index as RiderIndex
 from rider.views import New as RiderNew
 # from rider.views import Create as RiderCreate
 from rider.views import Edit as RiderEdit
+from rider.views import Delete as RiderDelete
 from rider.views import Update as RiderUpdate
 
 from states.views import Index as StatesIndex
@@ -36,6 +37,7 @@ urlpatterns = [
     path('riders/', RiderIndex.as_view(), name="create-rider"),
 
     path('riders/<int:id>/edit/', RiderEdit.as_view()),
+    path('riders/<int:id>/delete/', RiderDelete.as_view()),
     path('riders/<int:id>/', RiderUpdate.as_view(), name='update-rider'),
     path('riders/new/', RiderNew.as_view(), name='new-rider'),
 

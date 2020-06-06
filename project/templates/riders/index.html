@@ -30,6 +30,23 @@
         .dropdown:hover .dropdown-menu {
             display: block;
         }
+
+        .animate {
+            transition: all .5s;
+        }
+
+        .zero-opacity {
+            opacity: 0;
+        }
+
+        .fade-in {
+            opacity: 1;
+            transition: opacity 1s linear;
+        }
+        .fade-out {
+            opacity: 0;
+            transition: opacity 2s linear;
+        }
     </style>
 {% endblock %}
 
@@ -40,18 +57,19 @@ Responsive table
 https://tailwindcomponents.com/component/responsive-table
 -->
 
-{% comment %} <a href="riders/new">riders/new</a> {% endcomment %}
-
 <div class="px-4" id="app">
 
-{% comment %} <button @click="toggleModal('cancel')" class="bg-teal-500 text-white px-3 py-1 rounded-full">
-    View modal
-</button> {% endcomment %}
+    <div id="message-anchor" class="relative">
+        {% if flash %}
+        <div id="flash" class="p-2 bg-green-300 text-gray-600 inline rounded opacity-0 absolute top-0 left-0">
+            {{flash}}
+        </div>
+        {% endif %}
+    </div>
 
     <div class="flex justify-center items-center text-gray-600 text-3xl mt-4">
     Texas Grand Tour Riders
     </div>
-
 
     <div class="mt-6 mb-4 flex justify-between xxborder xxborder-gray-400 xxborder-solid">
         <div>
@@ -69,7 +87,7 @@ https://tailwindcomponents.com/component/responsive-table
                     </span>
                     <input name="search" class="bg-gray-300 w-full p-2" type="text" placeholder="Rider name" value="{{search}}">
                     <div class="flex items-center bg-gray-300 pr-4  rounded-br rounded-tr ">
-                        {% comment %} <select name="search-by" id=""class="text-sm bg-gray-300 text-gray-700 pr-2">
+                        {% comment %} <select name="search-by" id=""class="text-sm bg-gray-300 text-gray-600 pr-2">
                             <option>Starts with</option>
                             <option>Contains</option>
                         </select> {% endcomment %}
@@ -91,12 +109,6 @@ https://tailwindcomponents.com/component/responsive-table
 
 
     <table class="riders-list border-collapse w-full">
-        {% comment %} <colgroup>
-            <col width="35%">
-            <col width="25%">
-            <col width="15%">
-            <col width="25%">
-        </colgroup> {% endcomment %}
         <thead>
             <tr>
                 <th
@@ -121,7 +133,7 @@ https://tailwindcomponents.com/component/responsive-table
                 <td
                     class="w-full pl-2 py-2 lg:w-auto text-gray-800 text-center lg:text-left border border-b block lg:table-cell relative lg:static">
                     <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Rider</span>
-                    <span class="text-lg lg:text-xl">{{rider.full_name_backwards}}</span>
+                    <span class="text-lg lg:text-xl">{{rider.id}} {{rider.full_name_backwards}}</span>
                 </td>
                 <td
                     class="w-full pl-2 lg:w-auto text-gray-800 text-center lg:text-left border border-b block lg:table-cell relative lg:static">
@@ -201,11 +213,15 @@ https://tailwindcomponents.com/component/responsive-table
 
                 </div>
                 <div class="flex justify-center mt-4">
-                    <button @click="closeModal('yes')"
-                            class="w-24 bg-green-500 text-white mt-4 mr-6 px-4
-                                    py-2 rounded-md">
-                        Yes
-                    </button>
+                    <form :action="deleteUrl" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="delete-id" :value="riderId">
+                        <button @click="closeModal('yes')" type="submit"
+                                class="w-24 bg-green-500 text-white mt-4 mr-6 px-4
+                                        py-2 rounded-md">
+                            Yes
+                        </button>
+                    </form>
                     <button @click="closeModal('no')"
                             class="w-24 bg-red-500 text-white mt-4 px-4 py-2
                                     rounded-md">

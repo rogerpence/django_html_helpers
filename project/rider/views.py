@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
 from django.http import HttpResponse
 from django.views import View
+import urllib.parse
 from django.urls import reverse_lazy, reverse
 from django.core.paginator import Paginator
 from .models import Rider
@@ -130,37 +132,58 @@ class New(View):
 #         else:
 #             return render(request, 'riders/show.html', context)
 
+class Delete(View):
+    def post(self, request, id):
+        rider = get_object_or_404(Rider, pk=id)
+        rider.delete()
+        route = reverse('riders_list')
+        msg = urllib.parse.quote(f'{rider.full_name} successfully deleted.')
+        url = f'{route}?flash={msg}'
+        return redirect(url)
+
 class Index(View):
+    PAGE_SIZE = 8
+
     def get(self, request):
         '''
         Display the list of riders.
         '''
+
         if 'search' in request.GET:
             search =  request.GET.get('search')
             print(search.upper())
         else:
             search = None
 
+        msg = request.GET.get('flash') or None
+
         sw = StopWatch('Fetch 200 riders')
         sw.start()
 
         if search:
             riders = Rider.objects.filter(last_name__istartswith=search.upper()).order_by('last_name')
-        else:
+
+        if (search and len(riders) == 0):
+            msg = f'Search for "{search}" failed'
+            search = None
+
+        if (search and len(riders) == 0) or not search:
             riders = Rider.objects.order_by('last_name')
 
-        paginator = Paginator(riders, 8)
+        paginator = Paginator(riders, self.PAGE_SIZE)
 
         page_number = request.GET.get('page', 1)
         riders_page = paginator.get_page(page_number)
 
         context = {'riders': riders_page,
-                   'search': search if search is not None else ''
+                   'search': search if search is not None else '',
+                   'flash': msg
                   }
 
         sw.stop()
         sw.show_results()
         if request.method == 'GET':
+            messages.add_message(request, messages.INFO, 'Hello world.')
             return render(request, 'riders/index.html', context)
 
     def post(self, request):
