@@ -92,8 +92,7 @@ class Update(View):
             form.save()
 
             route = reverse('riders-list')
-            msg = urllib.parse.quote(f'{rider.full_name} successfully deleted.')
-            url = f'{route}?search={rider.last_name.lower()}'
+            url = f'{route}?startswith={rider.last_name.lower()}'
 
             return redirect(url)
             # return redirect('riders-list')
