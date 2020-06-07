@@ -19,8 +19,7 @@ def convert_states_dict_to_options(states_dict, selected_state_id):
     select_markup = html_helpers.create_options_list(items = states_dict,
                                                      text_field = 'province',
                                                      value_field = 'id',
-                                                     selected_value = selected_state_id,
-                                                     option_tag_attrs = {})
+                                                     selected_value = selected_state_id)
     return select_markup
 
 def get_states_options_list(request, selected_state_id):
@@ -32,10 +31,9 @@ def get_states_options_list(request, selected_state_id):
         print('fetched from session')
         states_dict = request.session['states_dict']
     else:
+        print('fetched from disk')
         states_dict = list(get_states_dict())
         request.session['states_dict'] = states_dict
-
-    # states_dict = list(get_states_dict())
 
     result = convert_states_dict_to_options(states_dict, selected_state_id)
     sw.stop()
@@ -60,7 +58,6 @@ class Edit(View):
                     'rider_id' : id,
                     'states_options_list': states_options_list,
                     'form_action': reverse('update-rider', args=[id])
-                    # 'form_action' : f'/riders/{id}'
                     }
 
         sw.stop()

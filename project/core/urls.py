@@ -26,8 +26,6 @@ from rider.views import Update as RiderUpdate
 from states.views import Index as StatesIndex
 
 urlpatterns = [
-    # path('', include('states.urls'), name="index"),
-    # path('', include('states.urls'), name="index"),
     path('admin/', admin.site.urls),
 
     # !! no URLs are necessary in the app.
@@ -35,7 +33,6 @@ urlpatterns = [
 
     path('riders/', RiderIndex.as_view(), name='riders-list'),
     path('riders/', RiderIndex.as_view(), name="create-rider"),
-
     path('riders/<int:id>/edit/', RiderEdit.as_view()),
     path('riders/<int:id>/delete/', RiderDelete.as_view()),
     path('riders/<int:id>/', RiderUpdate.as_view(), name='update-rider'),
