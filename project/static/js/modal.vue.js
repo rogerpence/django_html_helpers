@@ -11,6 +11,12 @@ export function modal() {
             this.showFlashMessage()
         },
         methods: {
+            clearSearch(e) {
+                console.log(e);
+                const searchInput = document.getElementById('search');
+                searchInput.value = '';
+                document.getElementById('search-form').submit();
+            },
             showFlashMessage() {
                 const messages = document.querySelectorAll('.django-message');
                 let messageTop = 0;

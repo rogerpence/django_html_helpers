@@ -82,17 +82,17 @@ https://tailwindcomponents.com/component/responsive-table
         </div>
 
         <div class="flex">
-            <form method="GET" action="{% url 'riders_list' %}" class="inline">
+            <form method="GET" id="search-form" action="{% url 'riders_list' %}" class="inline">
                 <div class="bg-white pt-2 pb-2 flex">
                     <span class="w-auto flex justify-end items-center rounded-tl rounded-bl bg-gray-300 text-gray-500 p-2">
                         <i class="fal fa-search"></i>
                     </span>
-                    <input name="search" class="bg-gray-300 w-full p-2" type="text" placeholder="Rider name" value="{{search}}">
-                    <div class="flex items-center bg-gray-300 pr-4  rounded-br rounded-tr ">
-                        {% comment %} <select name="search-by" id=""class="text-sm bg-gray-300 text-gray-600 pr-2">
-                            <option>Starts with</option>
-                            <option>Contains</option>
-                        </select> {% endcomment %}
+                    <input name="search" id="search" class="bg-gray-300 w-full p-2" type="text" placeholder="Rider name" value="{{search}}">
+                    <div class="bg-gray-300 w-full p-2 text-gray-500">
+                    <a href="#" @click="clearSearch($event)"><i class="fal fa-times-circle"></i></a>
+                    </div>
+                    <div class="bg-gray-400 hover:bg-gray-300 w-full p-2 text-gray-600 hover:text-gray-500 rounded-br rounded-tr border-l border-gray-500">
+                        <button class="" type="submit">Search</button>
                     </div>
                 </div>
             </form>
