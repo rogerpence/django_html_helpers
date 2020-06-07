@@ -4,6 +4,9 @@
 
 {% block head_content %}
     <style>
+        .or {
+            border: solid 1px red;
+        }
         .bg-smoke {
             background-color: rgba( 0,0,0,.5);
         }
@@ -52,46 +55,48 @@
 
 {% block content %}
 
-<!--
-Responsive table
-https://tailwindcomponents.com/component/responsive-table
--->
-
-<div class="px-4" id="app">
+<div class="px-2 md:px-4" id="app">
 
     <div id="message-anchor" class="relative">
         {% if messages %}
             <div>
             {% for message in messages %}
-                 <div class="django-message django-message-{{message.tags}} p-2 bg-green-300 text-gray-600 inline opacity-0 rounded absolute left-0">{{message}}</div>
+                 <div class="django-message django-message-{{message.tags}}
+                      p-1 md:p-2 bg-green-300 text-gray-600 inline opacity-0 rounded
+                      absolute left-0">{{message}}</div>
             {% endfor %}
             </div>
         {% endif %}
     </div>
 
-    <div class="flex justify-center items-center text-gray-600 text-3xl mt-4">
+    <div class="flex justify-center items-center text-gray-600 text-2xl md:text-3xl mt-4">
     Texas Grand Tour Riders
     </div>
 
-    <div class="mt-6 mb-4 flex justify-between xxborder xxborder-gray-400 xxborder-solid">
+    <div class="mt-6 mb-4 flex flex-col md:flex-row md:justify-between">
         <div>
             <a href="{% url 'new-rider' %}" class="bg-gray-300 hover:bg-gray-400 text-gray-600
-                        py-2 px-4 mr-1 rounded inline-flex items-center mt-2 mb-2">
+                        py-2 px-4 mr-1 rounded inline-flex items-center md:mt-2 md:mb-2">
                 <i class="far fa-plus-circle"></i>&nbsp;New rider
             </a>
         </div>
 
         <div class="flex">
-            <form method="GET" id="search-form" action="{% url 'riders_list' %}" class="inline">
+            <form method="GET" id="search-form" action="{% url 'riders-list' %}" class="inline">
                 <div class="bg-white pt-2 pb-2 flex">
-                    <span class="w-auto flex justify-end items-center rounded-tl rounded-bl bg-gray-300 text-gray-500 p-2">
+                    <span class="w-auto flex justify-end items-center rounded-tl rounded-bl
+                                 bg-gray-300 text-gray-500 p-2">
                         <i class="fal fa-search"></i>
                     </span>
-                    <input name="search" id="search" class="bg-gray-300 w-full p-2" type="text" placeholder="Rider name" value="{{search}}">
-                    <div class="bg-gray-300 w-full p-2 text-gray-500">
-                    <a href="#" @click="clearSearch($event)"><i class="fal fa-times-circle"></i></a>
+                    <input name="search" id="search"
+                           class="bg-gray-300 w-1/2 md:w-full p-2"
+                           type="text" placeholder="Rider name" value="{{search}}">
+                    <div class="bg-gray-300 md:w-full p-2 text-gray-500 hover:text-gray-800">
+                        <a href="#" @click="clearSearch($event)"><i class="fal fa-times-circle"></i></a>
                     </div>
-                    <div class="bg-gray-400 hover:bg-gray-300 w-full p-2 text-gray-600 hover:text-gray-500 rounded-br rounded-tr border-l border-gray-500">
+                    <div class="bg-gray-300 w-1/4 hover:bg-gray-500 md:w-full p-2 text-gray-600
+                                hover:text-gray-400 rounded-br rounded-tr
+                                border-l border-gray-500">
                         <button class="" type="submit">Search</button>
                     </div>
                 </div>
@@ -102,13 +107,6 @@ https://tailwindcomponents.com/component/responsive-table
             </div>
         </div>
     </div>
-
-
-    <!--
-    Add pagination
-    https://www.youtube.com/watch?v=Z8MDdDyB_6A
-    -->
-
 
     <table class="riders-list border-collapse w-full">
         <thead>
@@ -162,27 +160,11 @@ https://tailwindcomponents.com/component/responsive-table
                                                class="bg-yellow-300 hover:bg-yellow-400 text-gray-600
                                                 px-4 py-1 mr-1 rounded inline-flex items-center " title="Delete">
                                                <i class="far fa-minus-circle"></i><span>&nbsp;Delete</span></button>
-
-
-
-{% comment %}
-                    <a href="#" class="bg-gray-300 hover:bg-gray-400 text-gray-600
-                                               py-2 px-4 mr-1 rounded inline-flex items-center mt-2 mb-2" title="Delete">
-                                               <i class="far fa-minus-circle"></i><span>&nbsp;Delete</span></a> {% endcomment %}
-
-
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-
-        {% comment %} <a href="{% url 'new-rider' %}" class="bg-gray-300 hover:bg-gray-400 text-gray-600
-                       font-bold py-2 px-4 mr-1 rounded inline-flex items-center mt-2 mb-2">
-            <i class="far fa-plus-circle"></i>&nbsp;New rider
-        </a> {% endcomment %}
-
-
 
     <div class="flex justify-center mt-4">
         <a href="{% page_search_qs 1 0 search %}" class="bg-gray-300 hover:bg-gray-400 text-gray-600
@@ -238,4 +220,4 @@ https://tailwindcomponents.com/component/responsive-table
 
 <script type="module" src="{% static 'js/main.js' %}"></script>
 
-{% endblock%}
+{% endblock %}

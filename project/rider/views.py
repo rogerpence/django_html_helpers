@@ -90,7 +90,13 @@ class Update(View):
 
         if form.is_valid():
             form.save()
-            return redirect('riders_list')
+
+            route = reverse('riders-list')
+            msg = urllib.parse.quote(f'{rider.full_name} successfully deleted.')
+            url = f'{route}?search={rider.last_name.lower()}'
+
+            return redirect(url)
+            # return redirect('riders-list')
         else:
             return render(request, 'riders/show.html', context )
 
@@ -136,7 +142,7 @@ class Delete(View):
     def post(self, request, id):
         rider = get_object_or_404(Rider, pk=id)
         rider.delete()
-        route = reverse('riders_list')
+        route = reverse('riders-list')
         msg = urllib.parse.quote(f'{rider.full_name} successfully deleted.')
         url = f'{route}?flash={msg}'
 
@@ -171,6 +177,9 @@ class Index(View):
         if (search and len(riders) == 0):
             messages.info(request, f'Search for "{search}" failed')
             search = None
+
+        if (search and len(riders) > 0):
+            messages.info(request, f'Search for "{search}" active')
 
         if (search and len(riders) == 0) or not search:
             riders = Rider.objects.order_by('last_name')
@@ -215,6 +224,6 @@ class Index(View):
 
         if form.is_valid():
             form.save()
-            return redirect('riders_list')
+            return redirect('riders-list')
         else:
             return render(request, 'riders/show.html', context)

@@ -33,7 +33,7 @@ urlpatterns = [
     # !! no URLs are necessary in the app.
     path('states/', StatesIndex.as_view(), name='states' ),
 
-    path('riders/', RiderIndex.as_view(), name='riders_list'),
+    path('riders/', RiderIndex.as_view(), name='riders-list'),
     path('riders/', RiderIndex.as_view(), name="create-rider"),
 
     path('riders/<int:id>/edit/', RiderEdit.as_view()),
