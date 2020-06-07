@@ -39,3 +39,13 @@ def create_options_list(items,
         option_list.append('</option>')
 
     return "".join(option_list)
+
+
+# make a function that creates a url with a query string for redirecting to a named route
+# with a query
+
+# Manual way:
+#     route = reverse('riders-list')
+#     url = f'{route}?startswith={rider.last_name.lower()}'
+# With a function:
+#     get_route_with_qs('riders-list', {'startswith': rider.last_name.lower() })

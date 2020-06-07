@@ -6,12 +6,12 @@
 {% endblock %}
 
 {% block content %}
-    <section class="flex items-center justify-center mt-8 px-4 md:px-0 og">
+    <section class="flex items-center justify-center mt-8 px-4 md:px-0">
         <form method="POST" action="{{form_action}}">
             {% csrf_token %}
             <input type="hidden" name="id" id="id" value="{{rider_id}}"/><br>
 
-                <div class="flex flex-wrap -mx-3 mb-6 or">
+                <div class="flex flex-wrap -mx-3 mb-6">
                     <div class="w-full md:w-1/2 px-3 mb-2 md:mb-0 pb-3">
                         <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="first-name">First Name</label>
                         <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4
@@ -35,7 +35,7 @@
                     </div>
                 </div>
 
-                <div class="flex flex-wrap -mx-3 mb-6 or">
+                <div class="flex flex-wrap -mx-3 mb-6">
                     <div class="w-full px-3">
                         <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="address">Address</label>
                         <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4
@@ -47,7 +47,7 @@
                     </div>
                 </div>
 
-                <div class="flex flex-wrap -mx-3 mb-6 or">
+                <div class="flex flex-wrap -mx-3 mb-6">
                     <div class="w-full px-3">
                         <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="city">City</label>
                         <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4
@@ -59,7 +59,7 @@
                     </div>
                 </div>
 
-                <div class="flex flex-wrap -mx-3 mb-6 pb-3 or">
+                <div class="flex flex-wrap -mx-3 mb-6 pb-3">
                     <div class="w-full px-3">
                         <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="state">State</label>
                         <select name="state" id="state" class="select-css">
@@ -90,7 +90,7 @@
                     </div>
                 </div>
 
-                <div class="flex flex-wrap -mx-3 mb-6 or">
+                <div class="flex flex-wrap -mx-3 mb-6">
                     <div class="w-full px-3">
                         <label class="block uppercase tracking-wide text-gray-500 text-xs font-bold mb-2" for="phone">Phone</label>
                         <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4
@@ -114,3 +114,9 @@
     </section>
 {% endblock %}
 
+
+{% block script_content %}
+<script>
+    document.getElementById('first_name').focus();
+</script>
+{% endblock %}

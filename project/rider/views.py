@@ -92,11 +92,11 @@ class Update(View):
         if form.is_valid():
             form.save()
 
+            messages.info(request, f'{rider.full_name} updated.')
+
             route = reverse('riders-list')
             url = f'{route}?startswith={rider.last_name.lower()}'
-
             return redirect(url)
-            # return redirect('riders-list')
         else:
             return render(request, 'riders/show.html', context )
 
@@ -210,6 +210,12 @@ class Index(View):
 
         if form.is_valid():
             form.save()
-            return redirect('riders-list')
+            messages.info(request, f'{rider.full_name} successfully added.')
+
+            route = reverse('riders-list')
+            url = f'{route}?startswith={rider.last_name.lower()}'
+            return redirect(url)
+
+            # return redirect('riders-list')
         else:
             return render(request, 'riders/show.html', context)

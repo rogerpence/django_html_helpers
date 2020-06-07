@@ -32,11 +32,10 @@ export function modal() {
                         message.classList.add('fade-in');
                     },300);
 
-                    // // }, 300)
                     setTimeout(() => {
                         message.classList.remove('fade-in');
                         message.classList.add('fade-out');
-                    }, 3000)
+                    }, 4000)
 
                 })
             },
