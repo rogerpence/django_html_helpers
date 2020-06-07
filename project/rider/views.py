@@ -2,17 +2,18 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.http import HttpResponse
 from django.views import View
-import urllib.parse
 from django.urls import reverse_lazy, reverse
 from django.core.paginator import Paginator
+
 from .models import Rider
 from .forms import RiderForm
 from states.models import State
 from states.repo import get_states_dict
-# from core import repo
 from core import html_helpers
 from core.stopwatch import StopWatch
+
 import time
+import urllib.parse
 
 def convert_states_dict_to_options(states_dict, selected_state_id):
     select_markup = html_helpers.create_options_list(items = states_dict,
@@ -115,72 +116,62 @@ class New(View):
                    'form_action' : reverse_lazy('create-rider')}
         return render(request, 'riders/show.html', context)
 
-# class Create(View):
-#     def post(self, request):
-#         '''
-#         Add a new entity to database.
-#         '''
-#         state_id =  request.POST.get('state')
-#         states_options_list = get_states_options_list(request, state_id)
-
-#         rider = Rider()
-#         form = RiderForm(request.POST or None, instance=rider)
-
-#         context = {'form': form,
-#                    'rider_id': -1,
-#                    'states_options_list': states_options_list,f
-#                    'form_action' : reverse_lazy('create-rider')}
-
-#         if form.is_valid():
-#             form.save()
-#             return redirect('riders_list')
-#         else:
-#             return render(request, 'riders/show.html', context)
-
 class Delete(View):
     def post(self, request, id):
         rider = get_object_or_404(Rider, pk=id)
         rider.delete()
-        route = reverse('riders-list')
-        msg = urllib.parse.quote(f'{rider.full_name} successfully deleted.')
-        url = f'{route}?flash={msg}'
 
-        request.session['deleted-msg'] = f'{rider.full_name} successfully deleted.'
-        return redirect(route)
+        messages.info(request, f'{rider.full_name} successfully deleted.')
+
+        route = reverse('riders-list')
+        url = f'{route}?startswith={rider.last_name.lower()}'
+
+        return redirect(url)
 
 class Index(View):
     PAGE_SIZE = 8
+
+    def get_starts_with_results(self, request):
+        startswith =  request.GET.get('startswith')
+        riders = Rider.objects.filter(last_name__gte=startswith.lower()).order_by('last_name')
+
+        if not riders:
+            messages.info(request, f'Start-with search for "{startswith}" failed')
+
+        return riders, None
+
+    def get_search_results(self, request):
+        search =  request.GET.get('search')
+        riders = Rider.objects.filter(last_name__istartswith=search.upper()).order_by('last_name')
+
+        if riders:
+            messages.info(request, f'Search for "{search}" active')
+        else:
+            messages.info(request, f'Search for "{search}" failed')
+
+        return riders, search
+
+    def get_filtered_results(self, request):
+        search = request.GET.get('search') or None
+        startswith = request.GET.get('startswith') or None
+
+        if search:
+            return self.get_search_results(request)
+        elif startswith:
+            return self.get_starts_with_results(request)
+
+        return None, None
 
     def get(self, request):
         '''
         Display the list of riders.
         '''
-        if 'deleted-msg' in request.session:
-            messages.info(request,request.session['deleted-msg'])
-            del request.session['deleted-msg']
-
-        if 'search' in request.GET:
-            search =  request.GET.get('search')
-        else:
-            search = None
-
-        # msg = request.GET.get('flash') or None
-        msg = None
 
         sw = StopWatch('Fetch 200 riders')
         sw.start()
 
-        if search:
-            riders = Rider.objects.filter(last_name__istartswith=search.upper()).order_by('last_name')
-
-        if (search and len(riders) == 0):
-            messages.info(request, f'Search for "{search}" failed')
-            search = None
-
-        if (search and len(riders) > 0):
-            messages.info(request, f'Search for "{search}" active')
-
-        if (search and len(riders) == 0) or not search:
+        riders, search = self.get_filtered_results(request)
+        if riders is None:
             riders = Rider.objects.order_by('last_name')
 
         paginator = Paginator(riders, self.PAGE_SIZE)
@@ -189,21 +180,17 @@ class Index(View):
         riders_page = paginator.get_page(page_number)
 
         context = {'riders': riders_page,
-                   'search': search if search is not None else '',
-                   'flash': msg,
+                   'search': search or '',
                    'msg_top': 0
                   }
+
+        if 'deleted-msg' in request.session:
+            messages.info(request,request.session['deleted-msg'])
+            del request.session['deleted-msg']
 
         sw.stop()
         sw.show_results()
         if request.method == 'GET':
-            # messages.info(request,'info message')
-            # messages.success(request,'success message 1')
-            # messages.success(request,'success message 2')
-            # messages.warning(request,'warning message')
-            # messages.debug(request,'debug message')
-            # messages.error(request,'error message')
-
             return render(request, 'riders/index.html', context)
 
     def post(self, request):

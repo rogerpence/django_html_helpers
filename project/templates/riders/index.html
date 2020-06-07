@@ -3,54 +3,6 @@
 {% load mytags %}
 
 {% block head_content %}
-    <style>
-        .or {
-            border: solid 1px red;
-        }
-        .bg-smoke {
-            background-color: rgba( 0,0,0,.5);
-        }
-
-        .fade-enter-active, .fade-leave-active {
-            transition: opacity .5s;
-        }
-        .fade-enter, .fade-leave-to {
-            opacity: 0;
-        }
-
-        @media all and (min-width: 1024px) {
-            table.riders-list td:nth-child(1) {
-                width: 35%;
-            }
-            table.riders-list td:nth-child(2) {
-                width: 25%;
-            }
-            table.riders-list td:nth-child(3) {
-                width: 15%;
-            }
-        }
-
-        .dropdown:hover .dropdown-menu {
-            display: block;
-        }
-
-        .animate {
-            transition: all .5s;
-        }
-
-        .zero-opacity {
-            opacity: 0;
-        }
-
-        .fade-in {
-            opacity: 1;
-            transition: opacity 1s linear;
-        }
-        .fade-out {
-            opacity: 0;
-            transition: opacity 2s linear;
-        }
-    </style>
 {% endblock %}
 
 {% block content %}
@@ -217,6 +169,10 @@
     </transition>
 
 </div>
+
+{% endblock %}
+
+{% block script_content %}
 
 <script type="module" src="{% static 'js/main.js' %}"></script>
 

@@ -1,3 +1,52 @@
+.or {
+    border: solid 1px red;
+}
+
+.bg-smoke {
+    background-color: rgba( 0,0,0,.5);
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}
+
+@media all and (min-width: 1024px) {
+    table.riders-list td:nth-child(1) {
+        width: 35%;
+    }
+    table.riders-list td:nth-child(2) {
+        width: 25%;
+    }
+    table.riders-list td:nth-child(3) {
+        width: 15%;
+    }
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.animate {
+    transition: all .5s;
+}
+
+.fade-in {
+    opacity: 1;
+    transition: opacity 1s linear;
+}
+.fade-out {
+    opacity: 0;
+    transition: opacity 2s linear;
+}
+
+/*
+Filament group select tag css.
+https://www.filamentgroup.com/lab/select-css.html
+*/
+
 /* class applies to select element itself, not a wrapper element */
 .select-css {
 	display: block;
@@ -72,3 +121,4 @@
 .select-css:disabled:hover, .select-css[aria-disabled=true] {
 	border-color: #aaa;
 }
+

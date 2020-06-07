@@ -11,10 +11,6 @@ export function modal() {
             this.showFlashMessage()
         },
         methods: {
-            toggleNav(e) {
-                console.log('clicked');
-                e.currentTarget.classList.toggle('hidden');
-            },
             clearSearch(e) {
                 console.log(e);
                 const searchInput = document.getElementById('search');
@@ -40,23 +36,6 @@ export function modal() {
 
                 })
             },
-            showModal(e) {
-                this.riderId =  e.currentTarget.getAttribute('data-rider-id');
-                const riderName = e.currentTarget.getAttribute('data-rider-full-name');
-
-                this.deleteUrl = `/riders/${this.riderId}/delete/`;
-                this.message = `OK to delete ${riderName}'s account?`;
-                this.visible = true;
-            },
-            closeModal(action) {
-                console.log(action);
-                if (action === 'yes') {
-                    console.log(this.deleteUrl);
-                    // location.href = this.deleteUrl;
-                }
-
-                this.visible = false;
-            }
         }
     })
 }
