@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.views import View
 from django.urls import reverse_lazy, reverse
 from django.core.paginator import Paginator
+from django.views.decorators.http import require_http_methods
 
 from .models import Rider
 from .forms import RiderForm
@@ -11,208 +12,202 @@ from states.models import State
 from states.repo import get_states_dict
 from core import html_helpers
 from core.stopwatch import StopWatch
+from core.dropdowns import get_states_dropdown_list
 
 import time
 import urllib.parse
 
-def convert_states_dict_to_options(states_dict, selected_state_id):
-    select_markup = html_helpers.create_options_list(items = states_dict,
-                                                     text_field = 'province',
-                                                     value_field = 'id',
-                                                     selected_value = selected_state_id)
-    return select_markup
-
-def get_states_options_list(request, selected_state_id):
-    # rp:Todo: Consider using memcache later.
-    sw = StopWatch('Time to load states list')
+@require_http_methods(["GET"])
+def edit(request, id):
+    '''
+    Display an existing entity for editing.
+    '''
+    sw = StopWatch('Time to run rider.views.Edit method')
     sw.start()
 
-    if 'states_dict' in request.session:
-        print('fetched from session')
-        states_dict = request.session['states_dict']
-    else:
-        print('fetched from disk')
-        states_dict = list(get_states_dict())
-        request.session['states_dict'] = states_dict
+    rider = Rider.objects.get(id=id)
+    states_options_list = get_states_dropdown_list(rider.state.id)
 
-    result = convert_states_dict_to_options(states_dict, selected_state_id)
+    form = RiderForm(request.POST or None, instance=rider)
+
+    context =  {'form':form,
+                'rider_id' : id,
+                'states_options_list': states_options_list,
+                'form_action': reverse('update-rider', args=[id])
+                }
+
     sw.stop()
     sw.show_results()
 
-    return result
+    return render(request, 'riders/show.html', context)
 
-class Edit(View):
-    def get(self, request, id):
-        '''
-        Display an existing entity for editing.
-        '''
-        sw = StopWatch('Time to run rider.views.Edit method')
-        sw.start()
+@require_http_methods(["POST"])
+def update(request, id):
+    '''
+    Update an existing entity.
+    '''
+    rider_id = request.POST.get('id')
+    state_id =  request.POST.get('state')
 
-        rider = Rider.objects.get(id=id)
-        states_options_list = get_states_options_list(request, rider.state.id)
+    states_options_list = get_states_dropdown_list(state_id)
 
-        form = RiderForm(request.POST or None, instance=rider)
+    rider = get_object_or_404(Rider, pk=id)
+    form = RiderForm(request.POST or None, instance=rider)
 
-        context =  {'form':form,
-                    'rider_id' : id,
-                    'states_options_list': states_options_list,
-                    'form_action': reverse('update-rider', args=[id])
-                    }
+    context =  {'form':form,
+                'rider_id' : id,
+                'states_options_list': states_options_list,
+                'form_action': reverse('update-rider', args=[id])
+                }
 
-        sw.stop()
-        sw.show_results()
+    if form.is_valid():
+        form.save()
 
-        return render(request, 'riders/show.html', context)
-
-class Update(View):
-    def post(self, request, id):
-        '''
-        Update an existing entity.
-        '''
-        rider_id = request.POST.get('id')
-        state_id =  request.POST.get('state')
-        if state_id == '':
-            state_id = None
-        states_options_list = get_states_options_list(request, state_id)
-
-        rider = get_object_or_404(Rider, pk=id)
-        form = RiderForm(request.POST or None, instance=rider)
-
-        context =  {'form':form,
-                    'rider_id' : id,
-                    'states_options_list': states_options_list,
-                    'form_action': reverse('update-rider', args=[id])
-                    # 'form_action' : f'/riders/{id}'
-                    }
-
-        if form.is_valid():
-            form.save()
-
-            messages.info(request, f'{rider.full_name} updated.')
-
-            route = reverse('riders-list')
-            url = f'{route}?startswith={rider.last_name.lower()}'
-            return redirect(url)
-        else:
-            return render(request, 'riders/show.html', context )
-
-class New(View):
-    def get(self, request):
-        '''
-        Display form for adding a new entity.
-        '''
-        states_options_list = get_states_options_list(request, None)
-
-        rider = Rider()
-        form = RiderForm(request.POST or None, instance=rider)
-
-        context = {'form': form,
-                   'rider_id': -1,
-                   'states_options_list': states_options_list,
-                   'form_action' : reverse_lazy('create-rider')}
-        return render(request, 'riders/show.html', context)
-
-class Delete(View):
-    def post(self, request, id):
-        rider = get_object_or_404(Rider, pk=id)
-        rider.delete()
-
-        messages.info(request, f'{rider.full_name} successfully deleted.')
+        messages.info(request, f'{rider.full_name} updated.')
 
         route = reverse('riders-list')
         url = f'{route}?startswith={rider.last_name.lower()}'
-
         return redirect(url)
+    else:
+        return render(request, 'riders/show.html', context )
 
-class Index(View):
+@require_http_methods(["GET"])
+def new(request):
+    '''
+    Display form for adding a new entity.
+    '''
+    states_options_list = get_states_dropdown_list()
+
+    rider = Rider()
+    form = RiderForm(request.POST or None, instance=rider)
+
+    context = {'form': form,
+                'rider_id': -1,
+                'states_options_list': states_options_list,
+                'form_action' : reverse_lazy('create-rider')}
+    return render(request, 'riders/show.html', context)
+
+@require_http_methods(["POST"])
+def delete(request, id):
+    rider = get_object_or_404(Rider, pk=id)
+    rider.delete()
+
+    messages.info(request, f'{rider.full_name} successfully deleted.')
+
+    route = reverse('riders-list')
+    url = f'{route}?startswith={rider.last_name.lower()}'
+
+    return redirect(url)
+
+@require_http_methods(["GET", "POST"])
+def index(request):
+    if request.method == 'GET':
+        return index_get(request)
+
+    elif request.method == 'POST':
+        return index_post(request)
+
+@require_http_methods(["GET"])
+def index_get(request):
+    '''
+    Display the list of riders.
+    '''
     PAGE_SIZE = 8
 
-    def get_starts_with_results(self, request):
-        startswith =  request.GET.get('startswith')
-        riders = Rider.objects.filter(last_name__gte=startswith.lower()).order_by('last_name')
+    sw = StopWatch(f'Fetch {PAGE_SIZE} riders')
+    sw.start()
 
-        if not riders:
-            messages.info(request, f'Start-with search for "{startswith}" failed')
+    riders, search = get_filtered_results(request)
+    if riders is None:
+        riders = Rider.objects.order_by('last_name')
 
-        return riders, None
+    paginator = Paginator(riders, PAGE_SIZE)
 
-    def get_search_results(self, request):
-        search =  request.GET.get('search')
-        riders = Rider.objects.filter(last_name__istartswith=search.upper()).order_by('last_name')
+    page_number = request.GET.get('page', 1)
+    riders_page = paginator.get_page(page_number)
 
-        if riders:
-            messages.info(request, f'Search for "{search}" active')
-        else:
-            messages.info(request, f'Search for "{search}" failed')
+    context = {'riders': riders_page,
+                'search': search or '',
+                'msg_top': 0
+                }
 
-        return riders, search
+    if 'deleted-msg' in request.session:
+        messages.info(request,request.session['deleted-msg'])
+        del request.session['deleted-msg']
 
-    def get_filtered_results(self, request):
-        search = request.GET.get('search') or None
-        startswith = request.GET.get('startswith') or None
+    sw.stop()
+    sw.show_results()
+    if request.method == 'GET':
+        return render(request, 'riders/index.html', context)
 
-        if search:
-            return self.get_search_results(request)
-        elif startswith:
-            return self.get_starts_with_results(request)
+@require_http_methods(["POST"])
+def index_post(request):
+    '''
+    Add a new entity to database.
+    '''
+    state_id =  request.POST.get('state')
+    states_options_list = get_states_dropdown_list(state_id)
 
-        return None, None
+    rider = Rider()
+    form = RiderForm(request.POST or None, instance=rider)
 
-    def get(self, request):
-        '''
-        Display the list of riders.
-        '''
+    context = {'form': form,
+                'rider_id': -1,
+                'states_options_list': states_options_list,
+                'form_action' : reverse_lazy('create-rider')}
 
-        sw = StopWatch('Fetch 200 riders')
-        sw.start()
+    if form.is_valid():
+        form.save()
+        messages.info(request, f'{rider.full_name} successfully added.')
 
-        riders, search = self.get_filtered_results(request)
-        if riders is None:
-            riders = Rider.objects.order_by('last_name')
+        route = reverse('riders-list')
+        url = f'{route}?startswith={rider.last_name.lower()}'
+        return redirect(url)
 
-        paginator = Paginator(riders, self.PAGE_SIZE)
+    else:
+        return render(request, 'riders/show.html', context)
 
-        page_number = request.GET.get('page', 1)
-        riders_page = paginator.get_page(page_number)
+# -----------------------------------------------------------------------------
+# Helper functions.
+# -----------------------------------------------------------------------------
 
-        context = {'riders': riders_page,
-                   'search': search or '',
-                   'msg_top': 0
-                  }
+def get_starts_with_results(request):
+    '''
+    Get rider list where 'last_name' is greater than or equal to 'startswith' value.
+    '''
+    startswith =  request.GET.get('startswith')
+    riders = Rider.objects.filter(last_name__gte=startswith.lower()).order_by('last_name')
 
-        if 'deleted-msg' in request.session:
-            messages.info(request,request.session['deleted-msg'])
-            del request.session['deleted-msg']
+    if not riders:
+        messages.info(request, f'Start-with search for "{startswith}" failed')
 
-        sw.stop()
-        sw.show_results()
-        if request.method == 'GET':
-            return render(request, 'riders/index.html', context)
+    return riders, startswith
 
-    def post(self, request):
-        '''
-        Add a new entity to database.
-        '''
-        state_id =  request.POST.get('state')
-        states_options_list = get_states_options_list(request, state_id)
+def get_search_results(request):
+    '''
+    Get rider list where 'last_name' starts with 'search' value.
+    '''
+    search =  request.GET.get('search')
+    riders = Rider.objects.filter(last_name__istartswith=search.upper()).order_by('last_name')
 
-        rider = Rider()
-        form = RiderForm(request.POST or None, instance=rider)
+    if riders:
+        messages.info(request, f'Search for "{search}" active')
+    else:
+        messages.info(request, f'Search for "{search}" failed')
 
-        context = {'form': form,
-                   'rider_id': -1,
-                   'states_options_list': states_options_list,
-                   'form_action' : reverse_lazy('create-rider')}
+    return riders, search
 
-        if form.is_valid():
-            form.save()
-            messages.info(request, f'{rider.full_name} successfully added.')
+def get_filtered_results(request):
+    '''
+    Dispatch filtered queries for rider list.
+    '''
+    search = request.GET.get('search') or None
+    startswith = request.GET.get('startswith') or None
 
-            route = reverse('riders-list')
-            url = f'{route}?startswith={rider.last_name.lower()}'
-            return redirect(url)
+    if search:
+        return get_search_results(request)
+    elif startswith:
+        return get_starts_with_results(request)
 
-            # return redirect('riders-list')
-        else:
-            return render(request, 'riders/show.html', context)
+    return None, None
+

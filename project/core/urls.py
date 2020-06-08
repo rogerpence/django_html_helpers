@@ -16,34 +16,27 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from rider.views import Index as RiderIndex
-from rider.views import New as RiderNew
-# from rider.views import Create as RiderCreate
-from rider.views import Edit as RiderEdit
-from rider.views import Delete as RiderDelete
-from rider.views import Update as RiderUpdate
+from rider.views import index as RiderIndex
+from rider.views import new as RiderNew
+from rider.views import edit as RiderEdit
+from rider.views import delete as RiderDelete
+from rider.views import update as RiderUpdate
 
 from states.views import Index as StatesIndex
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # !! no URLs are necessary in the app.
     path('states/', StatesIndex.as_view(), name='states' ),
 
-    path('riders/', RiderIndex.as_view(), name='riders-list'),
-    path('riders/', RiderIndex.as_view(), name="create-rider"),
-    path('riders/<int:id>/edit/', RiderEdit.as_view()),
-    path('riders/<int:id>/delete/', RiderDelete.as_view()),
-    path('riders/<int:id>/', RiderUpdate.as_view(), name='update-rider'),
-    path('riders/new/', RiderNew.as_view(), name='new-rider'),
 
-    # path('riders/show.html')
+    path('riders/<int:id>/edit/', RiderEdit),
+    path('riders/<int:id>/delete/', RiderDelete),
+    path('riders/<int:id>/', RiderUpdate, name='update-rider'),
+    path('riders/new/', RiderNew, name='new-rider'),
+    path('riders/', RiderIndex, name='riders-list'),
+    path('riders/', RiderIndex, name="create-rider"),
 
-
-
-
-    path('', RiderIndex.as_view()),
-
+    path('', RiderIndex),
 
 ]
