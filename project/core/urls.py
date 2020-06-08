@@ -24,6 +24,7 @@ from rider.views import update as RiderUpdate
 
 from states.views import Index as StatesIndex
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 
@@ -40,3 +41,14 @@ urlpatterns = [
     path('', RiderIndex),
 
 ]
+
+#   Route name   URL                  Verb          Description
+#   --------------------------------------------------------------
+#   Index        /riders              GET           Display a list of riders
+#   New          /riders/new          GET           Display a form for new rider
+#   Create       /riders              POST          Add a new rider to DB
+#   Show         /riders/:id          GET           Show a rider
+#   Edit         /riders/:id/edit     GET           Show a rider for editing
+#   Update       /riders/:id          PUT/POST      Update a rider to DB
+#   Destroy      /riders/:id          DELETE/POST   Delete a rider
+#   Destroy      /riders/:id/delete   DELETE/POST   Delete a rider
