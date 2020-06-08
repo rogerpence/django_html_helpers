@@ -22,9 +22,6 @@ def edit(request, id):
     '''
     Display an existing entity for editing.
     '''
-    sw = StopWatch('Time to run rider.views.Edit method')
-    sw.start()
-
     rider = Rider.objects.get(id=id)
     states_options_list = get_states_dropdown_list(rider.state.id)
 
@@ -35,9 +32,6 @@ def edit(request, id):
                 'states_options_list': states_options_list,
                 'form_action': reverse('update-rider', args=[id])
                 }
-
-    sw.stop()
-    sw.show_results()
 
     return render(request, 'riders/show.html', context)
 
@@ -114,9 +108,6 @@ def index_get(request):
     '''
     PAGE_SIZE = 8
 
-    sw = StopWatch(f'Fetch {PAGE_SIZE} riders')
-    sw.start()
-
     riders, search = get_filtered_results(request)
     if riders is None:
         riders = Rider.objects.order_by('last_name')
@@ -135,8 +126,6 @@ def index_get(request):
         messages.info(request,request.session['deleted-msg'])
         del request.session['deleted-msg']
 
-    sw.stop()
-    sw.show_results()
     if request.method == 'GET':
         return render(request, 'riders/index.html', context)
 
@@ -154,7 +143,7 @@ def index_post(request):
     context = {'form': form,
                 'rider_id': -1,
                 'states_options_list': states_options_list,
-                'form_action' : reverse_lazy('create-rider')}
+                'form_action' : reverse('create-rider')}
 
     if form.is_valid():
         form.save()
@@ -210,4 +199,3 @@ def get_filtered_results(request):
         return get_starts_with_results(request)
 
     return None, None
-
