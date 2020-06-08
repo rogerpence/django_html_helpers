@@ -27,6 +27,8 @@ def create_options_list(items,
         option_list.append('</option>')
 
     for item in items:
+        a = str(item[value_field])
+        b = str(selected_value)
         if str(item[value_field]) == str(selected_value):
             option_tag_attrs['selected'] = 'selected'
         else:
@@ -38,7 +40,7 @@ def create_options_list(items,
         option_list.append(str(item[text_field]))
         option_list.append('</option>')
 
-    return "".join(option_list)
+    return ''.join(option_list)
 
 
 # make a function that creates a url with a query string for redirecting to a named route
